@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lblLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:textSize="13sp"
+            android:fontFamily="@font/inter_medium"
+            android:layout_marginBottom="12dp"
+            android:text="Đăng nhập"
+            android:textColor="@string/secondary_text_color" />
+
+        <View
+            android:id="@+id/sep"
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:background="@string/main_color" />
+    </LinearLayout>
+</FrameLayout>
