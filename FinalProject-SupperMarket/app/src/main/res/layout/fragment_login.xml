@@ -1,14 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="340dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:text="TÊN ĐĂNG NHẬP"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/input_text"
+                android:ems="10"
+                android:hint="Tên đăng nhập/số điện thoại"
+                android:inputType="text"
+                android:paddingLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="340dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="30dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+            <TextView
+                android:id="@+id/tvPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:text="MẬT KHẨU"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/input_text"
+                    android:ems="10"
+                    android:hint="Mật khẩu"
+                    android:inputType="textPassword"
+                    android:paddingLeft="8dp" />
+
+                <ImageView
+                    android:id="@+id/btnShowPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:alpha=".5"
+                    android:clickable="true"
+                    android:src="@drawable/hide_password_icon" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvForgetPassword"
+            android:layout_width="106dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center_horizontal|top"
+            android:text="FORGOT PASSWORD?"
+            android:textColor="#85000000"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button"
+            android:layout_width="340dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="38dp"
+            android:backgroundTint="@color/main_color"
+            android:text="ĐĂNG NHẬP"
+            app:cornerRadius="11dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvForgetPassword" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="44dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button">
+
+            <ImageView
+                android:id="@+id/imvGmail"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                tools:layout_editor_absoluteX="207dp"
+                tools:layout_editor_absoluteY="352dp"
+                tools:srcCompat="@drawable/gmail_svgrepo_com" />
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="124dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/button">
+
+            <ImageView
+                android:id="@+id/imvFacebook"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                tools:layout_editor_absoluteX="234dp"
+                tools:layout_editor_absoluteY="433dp"
+                tools:srcCompat="@drawable/facebook_1_svgrepo_com" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="100dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button">
+
+            <TextView
+                android:id="@+id/tvDontHaveAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="DON'T HAVE AN ACCOUNT?" />
+
+            <TextView
+                android:id="@+id/tvRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="REGISTER"
+                android:textColor="@color/main_color" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

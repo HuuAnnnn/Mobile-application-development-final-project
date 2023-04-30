@@ -2,11 +2,17 @@ package tdtu.edu.vn.finalproject_suppermarket;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +52,7 @@ public class LoginFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +60,51 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    private EditText edtPassword;
+    private ImageView showPassword;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        edtPassword = (EditText)view.findViewById(R.id.edtPassword);
+        showPassword = (ImageView)view.findViewById(R.id.btnShowPassword);
+        showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowHidePass(showPassword);
+            }
+        });
+    }
+
+    public void ShowHidePass(ImageView showPassword){
+
+        if(showPassword.getId()==R.id.btnShowPassword){
+
+            if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                ((ImageView)(showPassword)).setImageResource(R.drawable.show_password_icon);
+
+                //Show Password
+                edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                edtPassword.setSelection(edtPassword.getText().length());
+            }
+            else{
+                ((ImageView)(showPassword)).setImageResource(R.drawable.hide_password_icon);
+
+                //Hide Password
+                edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                edtPassword.setSelection(edtPassword.getText().length());
+            }
+        }
     }
 }

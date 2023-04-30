@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@string/main_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/main_color"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,9 +28,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
-            android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="@string/main_text_color"
+            android:text="@string/app_name"
+            android:textColor="@color/main_text_color"
             android:textSize="24sp" />
 
         <com.google.android.material.tabs.TabLayout
@@ -37,13 +38,16 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
+            app:tabIndicatorColor="@color/main_color"
+            app:tabTextColor="@color/black"
+            app:tabIndicator="@drawable/tab_indicator"
             android:background="@drawable/border_curve_2_conners"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@string/main_text_color"
+            android:background="@color/main_text_color"
             app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
 
     </LinearLayout>
