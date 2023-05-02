@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.button.MaterialButton;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PlacholderFragment#newInstance} factory method to
+ * Use the {@link RegisterFailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlacholderFragment extends Fragment implements SwitchFragmentInterface {
+public class RegisterFailFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,11 +29,9 @@ public class PlacholderFragment extends Fragment implements SwitchFragmentInterf
     private String mParam1;
     private String mParam2;
 
-    private static String ARG_POSITION = "position";
-
-    private int fragmentId = 0;
-
-    public PlacholderFragment() {
+    SwitchFragmentInterface mCallback;
+    public static int ID = 3;
+    public RegisterFailFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class PlacholderFragment extends Fragment implements SwitchFragmentInterf
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PlacholderFragment.
+     * @return A new instance of fragment RegisterFailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlacholderFragment newInstance(String param1, String param2) {
-        PlacholderFragment fragment = new PlacholderFragment();
+    public static RegisterFailFragment newInstance(String param1, String param2) {
+        RegisterFailFragment fragment = new RegisterFailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,13 +53,11 @@ public class PlacholderFragment extends Fragment implements SwitchFragmentInterf
         return fragment;
     }
 
-    public static PlacholderFragment newInstance(int position) {
-        PlacholderFragment fragment = new PlacholderFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(ARG_POSITION,position);
-        fragment.setArguments(bundle);
+    public static RegisterFailFragment newInstance() {
+        RegisterFailFragment fragment = new RegisterFailFragment();
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,56 +65,45 @@ public class PlacholderFragment extends Fragment implements SwitchFragmentInterf
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        fragmentId = getArguments().getInt(ARG_POSITION,0);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_placholder, container, false);
+        return inflater.inflate(R.layout.fragment_register_fail, container, false);
     }
 
+    private MaterialButton btnBackRegister;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadFragment(fragmentId);
-    }
-    void loadFragment(int id) {
-        Fragment fragment ;
-        if(id == RegisterFragment.ID){
-            fragment = RegisterFragment.newInstance();
-        }else if(id == ReigisterAddressFragment.ID){
-            fragment = ReigisterAddressFragment.newInstance();
-        }else if(id == RegisterSuccessFragment.ID) {
-            fragment = RegisterSuccessFragment.newInstance();
-        }else if(id == RegisterFailFragment.ID) {
-            fragment = RegisterFailFragment.newInstance();
-        }
-        else {
-            // unindentified fragment
-            return;
-        }
-        getChildFragmentManager().beginTransaction().
-                replace(R.id.container, fragment).
-                commit();
+        btnBackRegister = view.findViewById(R.id.btnBackRegister);
+        btnBackRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.switchFragment(RegisterFragment.ID);
+            }
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        try {
+            mCallback = (SwitchFragmentInterface ) getParentFragment();
+        } catch (ClassCastException e) {
+
+            throw new ClassCastException(getParentFragment().toString()
+                    + " must implement MyInterface ");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mCallback = null;
     }
 
-    //all children fragments call this method when a switch to a different fragment is needed.
-
-    @Override
-    public void switchFragment(int id) {
-        loadFragment(id);
-    }
 }

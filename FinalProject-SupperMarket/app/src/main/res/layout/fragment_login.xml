@@ -134,13 +134,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button">
 
-            <ImageView
+            <View
                 android:id="@+id/imvGmail"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 tools:layout_editor_absoluteX="207dp"
                 tools:layout_editor_absoluteY="352dp"
-                tools:srcCompat="@drawable/gmail_svgrepo_com" />
+                android:layout_gravity="center"
+                android:background="@drawable/gmail_svgrepo_com"/>
         </androidx.cardview.widget.CardView>
 
 
