@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:background="@drawable/border_curve_card_four_coners"
+    android:backgroundTint="#D9D9D9"
+    android:layout_marginVertical="7dp"
+    android:padding="7dp">
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="6dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/mockup_product_item" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/displayProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:text="Cá hồi"
+            android:textColor="#000000"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/displayProductId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:text="ID: F001"
+                android:textColor="#219EBC"
+                android:textSize="9sp" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:text="Xuất xứ: NaUy"
+                android:textColor="#219EBC"
+                android:textSize="9sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/displayProductDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_medium"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan dui in nulla fringilla ornare. Nulla sed fringilla eros. Vestibulum suscipit id tortor feugiat rutrum. Sed risus purus, convallis eget faucibus ut, aliquet et lectus."
+            android:textSize="8sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnAddToCart"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="9"
+                android:background="@null"
+                android:backgroundTint="@color/main_color"
+                android:fontFamily="@font/inter_bold"
+                android:text="THÊM VÀO GIỎ HÀNG"
+                android:textSize="8sp" />
+
+            <ImageButton
+                android:id="@+id/btnLikeProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:background="@null"
+                app:srcCompat="@drawable/mdi_cards_heart_outline" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

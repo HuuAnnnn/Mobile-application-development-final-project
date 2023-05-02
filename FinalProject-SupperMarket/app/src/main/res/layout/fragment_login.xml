@@ -43,6 +43,7 @@
                 android:background="@drawable/input_text"
                 android:ems="10"
                 android:hint="Tên đăng nhập/số điện thoại"
+                android:textSize="13sp"
                 android:inputType="text"
                 android:paddingLeft="8dp" />
         </LinearLayout>
@@ -82,6 +83,7 @@
                     android:background="@drawable/input_text"
                     android:ems="10"
                     android:hint="Mật khẩu"
+                    android:textSize="13sp"
                     android:inputType="textPassword"
                     android:paddingLeft="8dp" />
 
