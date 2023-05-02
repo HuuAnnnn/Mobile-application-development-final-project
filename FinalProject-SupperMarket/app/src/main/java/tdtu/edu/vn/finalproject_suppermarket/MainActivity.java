@@ -1,15 +1,13 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import android.os.Bundle;
+import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.EditText;
-
 import com.google.android.material.tabs.TabLayout;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
-
-        ViewPagerAuthAdapter viewPagerAuthAdapter = new ViewPagerAuthAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        ViewPagerAuthAdapter viewPagerAuthAdapter = new ViewPagerAuthAdapter(this, getSupportFragmentManager());
+        viewPagerAuthAdapter.addFragment(new LoginFragment());
+        viewPagerAuthAdapter.addFragment(PlacholderFragment.newInstance(RegisterFragment.ID));
         viewPager.setAdapter(viewPagerAuthAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 }

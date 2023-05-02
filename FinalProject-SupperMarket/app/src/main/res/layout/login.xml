@@ -41,7 +41,8 @@
             app:tabIndicatorColor="@color/main_color"
             app:tabTextColor="@color/black"
             app:tabIndicator="@drawable/tab_indicator"
-            android:background="@drawable/border_curve_2_conners"/>
+            android:background="@drawable/border_curve_2_conners">
+        </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"

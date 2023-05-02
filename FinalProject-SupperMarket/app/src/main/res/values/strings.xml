@@ -2,4 +2,11 @@
     <string name="app_name">Siêu thị điện tử</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="required_fullname">TÊN ĐĂNG NHẬP<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_firstname">HỌ<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_lastname">TÊN<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_phone">SỐ ĐIỆN THOẠI<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_password">MẬT KHẨU<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_reenter_password">NHẬP LẠI MẬT KHẨU<font color='#FF0000'>*</font><string>:</string></string>
+    <string name="required_gender">GIỚI TÍNH<font color='#FF0000'>*</font><string>:</string></string>
 </resources>

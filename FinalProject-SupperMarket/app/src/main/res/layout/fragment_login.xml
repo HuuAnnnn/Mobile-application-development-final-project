@@ -77,7 +77,7 @@
                 <EditText
                     android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="31dp"
                     android:layout_weight="1"
                     android:background="@drawable/input_text"
                     android:ems="10"

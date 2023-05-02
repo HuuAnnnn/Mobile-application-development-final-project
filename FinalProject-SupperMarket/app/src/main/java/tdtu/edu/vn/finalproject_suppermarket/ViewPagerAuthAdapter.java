@@ -1,34 +1,40 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-public class ViewPagerAuthAdapter extends FragmentStatePagerAdapter {
+import java.util.ArrayList;
 
-    public ViewPagerAuthAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+public class ViewPagerAuthAdapter extends FragmentPagerAdapter {
+
+    @StringRes
+    private final Context mContext;
+    private ArrayList<Fragment> fragmentArrayList = new ArrayList<Fragment>();
+
+    public ViewPagerAuthAdapter(Context context, FragmentManager fm) {
+        super(fm);
+        mContext = context;
     }
-
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position==0){
-            return new LoginFragment();
-        }
+       return fragmentArrayList.get(position);
+    }
 
-        if (position == 1){
-            return new RegisterFragment();
-        }
-
-        return new LoginFragment();
+    public void addFragment(Fragment fragment){
+        fragmentArrayList.add(fragment);
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return fragmentArrayList.size();
     }
 
     @Nullable
@@ -43,5 +49,13 @@ public class ViewPagerAuthAdapter extends FragmentStatePagerAdapter {
             title = "Đăng ký";
         }
         return title;
+    }
+
+    public void addTab(Fragment fragment){
+        fragmentArrayList.add(fragment);
+    }
+
+    public void removeTab(){
+        fragmentArrayList.remove(1);
     }
 }

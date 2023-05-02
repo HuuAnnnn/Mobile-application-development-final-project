@@ -6,22 +6,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFragment#newInstance} factory method to
+ * Use the {@link ReigisterAddressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterFragment extends Fragment {
+public class ReigisterAddressFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,9 +30,10 @@ public class RegisterFragment extends Fragment {
     private String mParam2;
 
     SwitchFragmentInterface mCallback;
-    public static int ID = 0;
 
-    public RegisterFragment() {
+    public static int ID = 1;
+
+    public ReigisterAddressFragment() {
         // Required empty public constructor
     }
 
@@ -45,11 +43,11 @@ public class RegisterFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
+     * @return A new instance of fragment ReigisterAddressFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
+    public static ReigisterAddressFragment newInstance(String param1, String param2) {
+        ReigisterAddressFragment fragment = new ReigisterAddressFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -57,8 +55,8 @@ public class RegisterFragment extends Fragment {
         return fragment;
     }
 
-    public static RegisterFragment newInstance() {
-        RegisterFragment fragment = new RegisterFragment();
+    public static ReigisterAddressFragment newInstance() {
+        ReigisterAddressFragment fragment = new ReigisterAddressFragment();
         return fragment;
     }
 
@@ -71,25 +69,11 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private MaterialButton buttonContinue;
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        buttonContinue = view.findViewById(R.id.btnContinue);
-        buttonContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.switchFragment(ReigisterAddressFragment.ID);
-            }
-        });
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        return inflater.inflate(R.layout.fragment_reigister_address, container, false);
     }
 
     @Override
@@ -99,7 +83,6 @@ public class RegisterFragment extends Fragment {
         try {
             mCallback = (SwitchFragmentInterface ) getParentFragment();
         } catch (ClassCastException e) {
-
             throw new ClassCastException(getParentFragment().toString()
                     + " must implement MyInterface ");
         }
@@ -110,5 +93,4 @@ public class RegisterFragment extends Fragment {
         super.onDetach();
         mCallback = null;
     }
-
 }

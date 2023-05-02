@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item android:width="340dp"
+                android:height="30dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/main_text_color"/>
+                    <corners android:radius="11dp"/>
+                    <stroke android:width="1dp" android:color="#023047"/>
+                </shape>
+            </item>
+            <item
+                android:height="30dp">
+                <bitmap
+                    android:gravity="center"
+                    android:src="@drawable/province_text"/>
+            </item>
+            <item
+                android:drawable="@drawable/baseline_keyboard_arrow_down_24"
+                android:gravity="end"/>
+        </layer-list>
+
+    </item>
+</selector>
