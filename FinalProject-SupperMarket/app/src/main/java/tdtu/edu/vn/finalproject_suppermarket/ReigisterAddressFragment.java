@@ -103,15 +103,16 @@ public class ReigisterAddressFragment extends Fragment{
     private Spinner spnWard;
     private ProvinceAdapter provinceAdapter;
     private DistrictsAdapter districtsAdapter;
+    private WardAdapter wardAdapter;
     List<Province> listProvince = new ArrayList<>();
     List<Districts> listDistricts = new ArrayList<>();
+    List<Ward> listWard = new ArrayList<>();
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         btnBack = view.findViewById(R.id.btnBack);
         btnSkip = view.findViewById(R.id.btnSkip);
         btnContinue = view.findViewById(R.id.btnContinue);
-        View fragmentView = view;
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,20 +136,69 @@ public class ReigisterAddressFragment extends Fragment{
 
         //generate spinner province
         listProvince.add(new Province("111", "---Tỉnh---", "111"));
-        getProvince();
+        listDistricts.add(new Districts("111", "---Quận, Huyện---", "111", "f"));
+        listWard.add(new Ward("---Phường/xã---"));
+
+        getProvince(); // generate List province
+
         spnProvince = view.findViewById(R.id.spnProvince);
         spnDistricts = view.findViewById(R.id.spnDistrict);
+        spnWard = view.findViewById(R.id.spnWard);
+
         provinceAdapter = new ProvinceAdapter(this.getContext(), R.layout.item_address_selected, listProvince);
         spnProvince.setAdapter(provinceAdapter);
-        spnProvince.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        districtsAdapter = new DistrictsAdapter(this.getContext(), R.layout.item_address_selected, listDistricts);
+        spnDistricts.setAdapter(districtsAdapter);
+        wardAdapter = new WardAdapter(this.getContext(), R.layout.item_address_selected, listWard);
+        spnWard.setAdapter(wardAdapter);
+        spnProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String provinceName = provinceAdapter.getItem(position).getName_with_type();
-                listDistricts.add(new Districts("111", "---Tỉnh---", "111","f"));
-                districtsAdapter = new DistrictsAdapter(fragmentView.getContext(), R.layout.item_address_selected, listDistricts);
-                spnProvince.setAdapter(provinceAdapter);
+                if(!provinceName.equals("---Tỉnh---")) {
+                    listDistricts = new ArrayList<>();
+                    Province province = findProvince(provinceName);
+                    listDistricts.add(new Districts("111", "---Quận, Huyện---", "111", "f"));
+                    getDistricts(province.getCode());
+                    districtsAdapter = new DistrictsAdapter(getContext(), R.layout.item_address_selected, listDistricts);
+                    spnDistricts.setAdapter(districtsAdapter);
+
+                    spnDistricts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String districtsName = districtsAdapter.getItem(position).getNameWithType();
+                            if(position!=0) {
+                                Districts districts = findDistricts(districtsName);
+                                listWard = new ArrayList<>();
+                                listWard.add(new Ward("---Phường/xã---"));
+                                getWard(districts.getCode());
+                                wardAdapter = new WardAdapter(getContext(), R.layout.item_address_selected, listWard);
+                                spnWard.setAdapter(wardAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+    }
+    public Province findProvince(String nameProvince){
+        Province province = null;
+        for (int i = 0; i<listProvince.size(); i++){
+            if(listProvince.get(i).getName_with_type().equals(nameProvince)){
+                province = listProvince.get(i);
+            }
+        }
+        return province;
     }
 
     public void getProvince(){
@@ -191,7 +241,91 @@ public class ReigisterAddressFragment extends Fragment{
         });
     }
 
+    public Districts findDistricts(String nameDistricts){
+        Districts districts = null;
+        for (int i = 0; i<listDistricts.size(); i++){
+            if(listDistricts.get(i).getNameWithType().equals(nameDistricts)){
+                districts = listDistricts.get(i);
+            }
+        }
+        return districts;
+    }
+    public void getDistricts(String provinceCode){
+        // Khởi tạo OkHttpClient để lấy dữ liệu.
+        OkHttpClient client = new OkHttpClient();
 
+        // Tạo request lên server.
+        Request request = new Request.Builder()
+                .url("https://vn-public-apis.fpo.vn/districts/getByProvince?provinceCode="+provinceCode.trim()+"&limit=-1")
+                .get()
+                .build();
+
+        // Thực thi request.
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Error", "Network Error");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // Lấy thông tin JSON trả về. Bạn có thể log lại biến json này để xem nó như thế nào.
+                String json = response.body().string();
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(json);
+                    JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject item = jsonArray.getJSONObject(i);
+                        String nameWithType = item.getString("name_with_type");
+                        String code = item.getString("code");
+                        String _id = item.getString("_id");
+                        String parentCode = item.getString("parent_code");
+                        listDistricts.add(new Districts(_id, nameWithType, code,parentCode.trim()));
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
+    public void getWard(String districtCode){
+        // Khởi tạo OkHttpClient để lấy dữ liệu.
+        OkHttpClient client = new OkHttpClient();
+
+        // Tạo request lên server.
+        Request request = new Request.Builder()
+                .url("https://vn-public-apis.fpo.vn/wards/getByDistrict?districtCode="+districtCode.trim()+"&limit=-1")
+                .get()
+                .build();
+
+        // Thực thi request.
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Error", "Network Error");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // Lấy thông tin JSON trả về. Bạn có thể log lại biến json này để xem nó như thế nào.
+                String json = response.body().string();
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(json);
+                    JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject item = jsonArray.getJSONObject(i);
+                        String nameWithType = item.getString("name_with_type");
+                        listWard.add(new Ward(nameWithType));
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
