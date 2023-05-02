@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public class DistrictsAdapter extends ArrayAdapter<Districts> {
-    public DistrictsAdapter(@NonNull Context context, int resource, @NonNull List<Districts> objects) {
+public class DistrictsSpinnerAdapter extends ArrayAdapter<Districts> {
+    public DistrictsSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Districts> objects) {
         super(context, resource, objects);
     }
 

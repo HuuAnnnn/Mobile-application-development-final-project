@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public class ProvinceAdapter extends ArrayAdapter<Province> {
-    public ProvinceAdapter(@NonNull Context context, int resource, @NonNull List<Province> objects) {
+public class ProvinceSpinnerAdapter extends ArrayAdapter<Province> {
+    public ProvinceSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Province> objects) {
         super(context, resource, objects);
     }
 

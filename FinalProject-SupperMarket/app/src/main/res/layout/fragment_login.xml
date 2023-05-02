@@ -123,49 +123,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvForgetPassword" />
 
-        <androidx.cardview.widget.CardView
+        <View
             android:id="@+id/cardView"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="124dp"
-            android:layout_marginTop="44dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="250dp"
+            android:layout_marginTop="30dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button">
+            app:layout_constraintTop_toBottomOf="@+id/button"
+            android:background="@drawable/view_border">
+        </View>
 
-            <View
-                android:id="@+id/imvGmail"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                tools:layout_editor_absoluteX="207dp"
-                tools:layout_editor_absoluteY="352dp"
-                android:layout_gravity="center"
-                android:background="@drawable/gmail_svgrepo_com"/>
-        </androidx.cardview.widget.CardView>
+        <View
+            android:id="@+id/imvGmail"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="114dp"
+            android:background="@drawable/gmail_svgrepo_com"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button" />
 
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+        <View
+            android:id="@+id/materialCardView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="48dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="124dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/button">
+            app:layout_constraintTop_toBottomOf="@+id/button"
+            android:background="@drawable/view_border">
+        </View>
 
-            <ImageView
-                android:id="@+id/imvFacebook"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                tools:layout_editor_absoluteX="234dp"
-                tools:layout_editor_absoluteY="433dp"
-                tools:srcCompat="@drawable/facebook_1_svgrepo_com" />
-        </androidx.cardview.widget.CardView>
+        <View
+            android:id="@+id/imvFacebook"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="98dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/facebook_1_svgrepo_com"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button" />
 
         <LinearLayout
             android:layout_width="250dp"

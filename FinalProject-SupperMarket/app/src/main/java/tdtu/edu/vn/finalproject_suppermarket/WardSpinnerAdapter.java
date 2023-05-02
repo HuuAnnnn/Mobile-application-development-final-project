@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public class WardAdapter extends ArrayAdapter<Ward> {
-    public WardAdapter(@NonNull Context context, int resource, @NonNull List<Ward> objects) {
+public class WardSpinnerAdapter extends ArrayAdapter<Ward> {
+    public WardSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Ward> objects) {
         super(context, resource, objects);
     }
 

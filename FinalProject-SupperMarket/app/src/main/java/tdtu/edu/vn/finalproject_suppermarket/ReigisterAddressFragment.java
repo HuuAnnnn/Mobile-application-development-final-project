@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
@@ -101,9 +99,9 @@ public class ReigisterAddressFragment extends Fragment{
     private Spinner spnProvince;
     private Spinner spnDistricts;
     private Spinner spnWard;
-    private ProvinceAdapter provinceAdapter;
-    private DistrictsAdapter districtsAdapter;
-    private WardAdapter wardAdapter;
+    private ProvinceSpinnerAdapter provinceSpinnerAdapter;
+    private DistrictsSpinnerAdapter districtsSpinnerAdapter;
+    private WardSpinnerAdapter wardSpinnerAdapter;
     List<Province> listProvince = new ArrayList<>();
     List<Districts> listDistricts = new ArrayList<>();
     List<Ward> listWard = new ArrayList<>();
@@ -145,35 +143,35 @@ public class ReigisterAddressFragment extends Fragment{
         spnDistricts = view.findViewById(R.id.spnDistrict);
         spnWard = view.findViewById(R.id.spnWard);
 
-        provinceAdapter = new ProvinceAdapter(this.getContext(), R.layout.item_address_selected, listProvince);
-        spnProvince.setAdapter(provinceAdapter);
-        districtsAdapter = new DistrictsAdapter(this.getContext(), R.layout.item_address_selected, listDistricts);
-        spnDistricts.setAdapter(districtsAdapter);
-        wardAdapter = new WardAdapter(this.getContext(), R.layout.item_address_selected, listWard);
-        spnWard.setAdapter(wardAdapter);
+        provinceSpinnerAdapter = new ProvinceSpinnerAdapter(this.getContext(), R.layout.item_address_selected, listProvince);
+        spnProvince.setAdapter(provinceSpinnerAdapter);
+        districtsSpinnerAdapter = new DistrictsSpinnerAdapter(this.getContext(), R.layout.item_address_selected, listDistricts);
+        spnDistricts.setAdapter(districtsSpinnerAdapter);
+        wardSpinnerAdapter = new WardSpinnerAdapter(this.getContext(), R.layout.item_address_selected, listWard);
+        spnWard.setAdapter(wardSpinnerAdapter);
         spnProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String provinceName = provinceAdapter.getItem(position).getName_with_type();
+                String provinceName = provinceSpinnerAdapter.getItem(position).getName_with_type();
                 if(!provinceName.equals("---Tỉnh---")) {
                     listDistricts = new ArrayList<>();
                     Province province = findProvince(provinceName);
                     listDistricts.add(new Districts("111", "---Quận, Huyện---", "111", "f"));
                     getDistricts(province.getCode());
-                    districtsAdapter = new DistrictsAdapter(getContext(), R.layout.item_address_selected, listDistricts);
-                    spnDistricts.setAdapter(districtsAdapter);
+                    districtsSpinnerAdapter = new DistrictsSpinnerAdapter(getContext(), R.layout.item_address_selected, listDistricts);
+                    spnDistricts.setAdapter(districtsSpinnerAdapter);
 
                     spnDistricts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String districtsName = districtsAdapter.getItem(position).getNameWithType();
+                            String districtsName = districtsSpinnerAdapter.getItem(position).getNameWithType();
                             if(position!=0) {
                                 Districts districts = findDistricts(districtsName);
                                 listWard = new ArrayList<>();
                                 listWard.add(new Ward("---Phường/xã---"));
                                 getWard(districts.getCode());
-                                wardAdapter = new WardAdapter(getContext(), R.layout.item_address_selected, listWard);
-                                spnWard.setAdapter(wardAdapter);
+                                wardSpinnerAdapter = new WardSpinnerAdapter(getContext(), R.layout.item_address_selected, listWard);
+                                spnWard.setAdapter(wardSpinnerAdapter);
                             }
                         }
 
