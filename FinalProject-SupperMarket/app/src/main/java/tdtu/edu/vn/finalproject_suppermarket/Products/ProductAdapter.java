@@ -40,12 +40,11 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = (Product) data.get(position);
-        holder.displayProductId.setText(product.getId());
-        holder.displayProductName.setText(product.getName());
-        holder.displayProductOrigin.setText(product.getOrigin());
+        holder.displayProductId.setText("ID: " + product.getId());
+        holder.displayProductName.setText("Tên: " + product.getName());
+        holder.displayProductOrigin.setText("Nguồn gốc: " + product.getOrigin());
         holder.displayProductDescription.setText(product.getDescription());
-        holder.displayProductPrice.setText(String.valueOf(product.getPrice()));
-
+        holder.displayProductPrice.setText("Giá: " + String.valueOf(product.getPrice()));
 
         byte[] decodedString = Base64.decode(product.getImage(), Base64.DEFAULT);
         Bitmap imageProduct = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
