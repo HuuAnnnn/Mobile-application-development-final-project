@@ -2,6 +2,8 @@ package tdtu.edu.vn.finalproject_suppermarket.Products;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,19 +27,17 @@ import tdtu.edu.vn.finalproject_suppermarket.R;
 
 public class MainProduct extends AppCompatActivity {
     private static final String GET_PRODUCTS_ENDPOINTS = "https://suppermarket-api.fly.dev/product/products";
-    private ArrayList<Product> products;
     private ProductAdapter<Product> productAdapter;
     private RecyclerView displayAllProducts;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_display_products);
         displayAllProducts = findViewById(R.id.displayProducts);
-        products = new ArrayList<Product>();
-        productAdapter = new ProductAdapter<Product>(this, products);
-        displayAllProducts.setAdapter(productAdapter);
-        displayAllProducts.setLayoutManager(new LinearLayoutManager(this));
+        spinner = findViewById(R.id.progressBar);
+        spinner.bringToFront();
         loadProducts();
     }
 
@@ -65,6 +65,7 @@ public class MainProduct extends AppCompatActivity {
                                 if (!isSuccess) {
                                     Toast.makeText(MainProduct.this, "Không thể tải sản phẩm! Vui lòng kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    ArrayList<Product> products = new ArrayList<Product>();
                                     JSONArray data = json.getJSONArray("data");
                                     for (int i = 0; i < data.length(); i++) {
                                         JSONObject jsonObject = data.getJSONObject(i);
@@ -77,10 +78,13 @@ public class MainProduct extends AppCompatActivity {
                                                 jsonObject.getInt("price"),
                                                 jsonObject.getString("image")
                                         );
+
                                         products.add(product);
                                     }
-
-                                    productAdapter.updateData(products);
+                                    productAdapter = new ProductAdapter<Product>(MainProduct.this, products);
+                                    displayAllProducts.setAdapter(productAdapter);
+                                    displayAllProducts.setLayoutManager(new LinearLayoutManager(MainProduct.this));
+                                    spinner.setVisibility(View.INVISIBLE);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
+from ..model.login import LoginDTO
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -24,20 +25,22 @@ def authentication_user(username: str, password: str):
 
 
 @router.post("/login")
-async def login(username: str, password: str):
+async def login(loginDTO: LoginDTO):
+    username = loginDTO.username
+    password = loginDTO.password
     if not is_exists_user(username):
-        return {"status:": False, "message": "User is not exits"}
+        return {"status": False, "message": "User is not exits"}
 
     if not authentication_user(username, password):
-        return {"status:": False, "message": "Wrong username/password"}
+        return {"status": False, "message": "Wrong username/password"}
 
-    return {"status:": True, "message": "Login successfully"}
+    return {"status": True, "message": "Login successfully"}
 
 
 @router.post("/information")
 async def information(username: str):
     if not is_exists_user(username):
-        return {"status:": False, "message": "User is not exits"}
+        return {"status": False, "message": "User is not exits"}
 
     information_query = {"username": username}
     user_information = user_collection.find_one(information_query, {"_id": 0})
@@ -77,4 +80,4 @@ async def register(
     }
 
     user_collection.insert_one(user_information)
-    return {"status:": True, "message": "Register successfully"}
+    return {"status": True, "message": "Register successfully"}

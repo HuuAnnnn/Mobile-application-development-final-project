@@ -46,6 +46,4 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-
-    implementation "androidx.core:core-splashscreen:1.0.0-alpha01"
 }
