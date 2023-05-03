@@ -1,12 +1,9 @@
 from fastapi import FastAPI
-from .routers import users
-from dotenv import load_dotenv
-from pathlib import Path
-from .database.MongoDB import MongoDB
-import os
+from .routers import users, product
 
 app = FastAPI()
 app.include_router(users.router)
+app.include_router(product.router)
 
 
 @app.get("/")
