@@ -35,7 +35,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import tdtu.edu.vn.finalproject_suppermarket.Products.MainProduct;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -204,7 +203,7 @@ public class LoginFragment extends Fragment {
                             JSONObject json = new JSONObject(responseData);
                             boolean isLogged = json.getBoolean("status");
                             if (isLogged) {
-                                Intent intent = new Intent(getActivity(), MainProduct.class);
+                                Intent intent = new Intent(getActivity(), Home.class);
                                 startActivity(intent);
                                 ((Activity) getActivity()).finish();
                             } else {
