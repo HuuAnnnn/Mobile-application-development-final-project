@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_color">
+    android:background="@color/main_color"
+    tools:context=".SplashScreen">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="315dp"
         android:layout_height="324dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="176dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
@@ -25,7 +26,7 @@
         android:text="@string/app_name"
         android:textAllCaps="true"
         android:textColor="#ffffff"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,14 +2,14 @@ package tdtu.edu.vn.finalproject_suppermarket;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -24,13 +24,12 @@ public class RegisterSuccessFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static int ID = 2;
+    SwitchFragmentInterface mCallback;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    SwitchFragmentInterface mCallback;
-    public static int ID = 2;
+    private MaterialButton btnBackHome;
 
     public RegisterSuccessFragment() {
         // Required empty public constructor
@@ -75,7 +74,6 @@ public class RegisterSuccessFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_register_success, container, false);
     }
 
-    private MaterialButton btnBackHome;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,16 +81,18 @@ public class RegisterSuccessFragment extends Fragment {
         btnBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.switchFragment(RegisterFragment.ID);
+                ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
+                mviewPager.setCurrentItem(0);
             }
         });
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            mCallback = (SwitchFragmentInterface ) getParentFragment();
+            mCallback = (SwitchFragmentInterface) getParentFragment();
         } catch (ClassCastException e) {
 
             throw new ClassCastException(getParentFragment().toString()

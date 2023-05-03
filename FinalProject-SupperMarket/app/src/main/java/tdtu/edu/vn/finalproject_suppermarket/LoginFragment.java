@@ -1,21 +1,19 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,14 +22,18 @@ import com.google.android.material.button.MaterialButton;
  */
 public class LoginFragment extends Fragment {
 
+    public static final int ID = 0;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText edtPassword;
+    private ImageView showPassword;
+    private TextView btnRegister;
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -64,7 +66,6 @@ public class LoginFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,13 +73,22 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    private EditText edtPassword;
-    private ImageView showPassword;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        edtPassword = (EditText)view.findViewById(R.id.edtPassword);
-        showPassword = (ImageView)view.findViewById(R.id.btnShowPassword);
+        edtPassword = (EditText) view.findViewById(R.id.edtPassword);
+        showPassword = (ImageView) view.findViewById(R.id.btnShowPassword);
+        btnRegister = view.findViewById(R.id.tvRegister);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
+                mviewPager.setCurrentItem(2);
+            }
+        });
+
         showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,19 +97,18 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void ShowHidePass(ImageView showPassword){
+    public void ShowHidePass(ImageView showPassword) {
 
-        if(showPassword.getId()==R.id.btnShowPassword){
+        if (showPassword.getId() == R.id.btnShowPassword) {
 
-            if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                ((ImageView)(showPassword)).setImageResource(R.drawable.show_password_icon);
+            if (edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
+                ((ImageView) (showPassword)).setImageResource(R.drawable.show_password_icon);
 
                 //Show Password
                 edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 edtPassword.setSelection(edtPassword.getText().length());
-            }
-            else{
-                ((ImageView)(showPassword)).setImageResource(R.drawable.hide_password_icon);
+            } else {
+                ((ImageView) (showPassword)).setImageResource(R.drawable.hide_password_icon);
 
                 //Hide Password
                 edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
