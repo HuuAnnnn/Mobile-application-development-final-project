@@ -9,4 +9,8 @@
     <string name="required_password">MẬT KHẨU<font color='#FF0000'>*</font><string>:</string></string>
     <string name="required_reenter_password">NHẬP LẠI MẬT KHẨU<font color='#FF0000'>*</font><string>:</string></string>
     <string name="required_gender">GIỚI TÍNH<font color='#FF0000'>*</font><string>:</string></string>
+
+    <string name="facebook_app_id">1171447170220417</string>
+    <string name="fb_login_protocol_scheme">fb1171447170220417</string>
+    <string name="facebook_client_token">f93a924c9cd228a51f48724832c41413</string>
 </resources>
