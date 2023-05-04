@@ -18,9 +18,17 @@ router = APIRouter(
 
 @router.post("/add-new-notification")
 async def add_new_post(notificationDTO: NotificationDTO):
+    index = len(
+        [
+            notification
+            for notification in notification_collection.find({}, {"_id": 0})
+        ]
+    )
+    id = f"{datetime.now().strftime('%d%m%Y')}{(index + 1)}"
     index = {
+        "id": id,
         "title": notificationDTO.title,
-        "content": notificationDTO.title,
+        "content": notificationDTO.content,
         "image": get_as_base64(notificationDTO.image_url),
         "dateCreate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     }
@@ -28,7 +36,7 @@ async def add_new_post(notificationDTO: NotificationDTO):
     notification_collection.insert_one(index)
 
 
-@router.post("/notifications")
+@router.get("/notifications")
 async def notifications():
     notifications = notification_collection.find({}, {"_id": 0}).sort(
         "dateCreate", pymongo.DESCENDING

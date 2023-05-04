@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import tdtu.edu.vn.finalproject_suppermarket.Notification.DisplayNotification;
 import tdtu.edu.vn.finalproject_suppermarket.Products.DisplayMainProduct;
 
 public class Home extends AppCompatActivity {
@@ -38,6 +39,9 @@ public class Home extends AppCompatActivity {
                         break;
                     case R.id.homepage:
                         addNewFragment(new DisplayMainProduct());
+                        break;
+                    case R.id.notification:
+                        addNewFragment(new DisplayNotification());
                         break;
                 }
                 return true;
