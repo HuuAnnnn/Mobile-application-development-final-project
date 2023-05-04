@@ -1,10 +1,14 @@
 package tdtu.edu.vn.finalproject_suppermarket.Products;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,7 +51,7 @@ public class DisplayMainProduct extends Fragment {
     private ProductAdapter<Product> productAdapter;
     private RecyclerView displayAllProducts;
     private ProgressBar spinner;
-
+    private EditText inputSearch;
     public DisplayMainProduct() {
         // Required empty public constructor
     }
@@ -93,8 +97,88 @@ public class DisplayMainProduct extends Fragment {
         spinner = view.findViewById(R.id.progressBar);
         spinner.bringToFront();
         loadProducts();
+
+        inputSearch = view.findViewById(R.id.inputSearch);
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String keyword = inputSearch.getText().toString().trim();
+                if(!keyword.equals("")){
+                    searchProducts(keyword);
+                }
+            }
+        });
     }
 
+    public void searchProducts(String keyword){
+        OkHttpClient client = new OkHttpClient();
+        String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
+        Toast.makeText(getContext(), findProductString, Toast.LENGTH_SHORT).show();
+
+        Request request = new Request.Builder().url(GET_PRODUCTS_ENDPOINTS).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    JSONObject json = new JSONObject(responseData);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean isSuccess = false;
+                            try {
+                                isSuccess = json.getBoolean("status");
+                                if (!isSuccess) {
+                                    Toast.makeText(getContext(), "Không thể tải sản phẩm! Vui lòng kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    ArrayList<Product> products = new ArrayList<Product>();
+                                    JSONArray data = json.getJSONArray("data");
+                                    for (int i = 0; i < data.length(); i++) {
+                                        JSONObject jsonObject = data.getJSONObject(i);
+                                        Product product = new Product(
+                                                jsonObject.getString("id"),
+                                                jsonObject.getString("name"),
+                                                jsonObject.getString("origin"),
+                                                jsonObject.getString("description"),
+                                                jsonObject.getString("category"),
+                                                jsonObject.getInt("price"),
+                                                jsonObject.getString("image")
+                                        );
+                                        Toast.makeText(getContext(), jsonObject.getString("name"), Toast.LENGTH_SHORT).show();
+
+                                        products.add(product);
+                                    }
+                                    productAdapter = new ProductAdapter<Product>(getActivity(), products);
+                                    displayAllProducts.setAdapter(productAdapter);
+                                    displayAllProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                    spinner.setVisibility(View.INVISIBLE);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.d("onResponse", e.getMessage());
+                }
+            }
+        });
+    }
     public void loadProducts() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(GET_PRODUCTS_ENDPOINTS).build();
