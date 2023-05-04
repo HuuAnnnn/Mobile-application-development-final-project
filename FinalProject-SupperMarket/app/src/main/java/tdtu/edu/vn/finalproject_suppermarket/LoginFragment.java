@@ -37,7 +37,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -65,22 +64,20 @@ public class LoginFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    CallbackManager callbackManager;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private EditText edtPassword;
     private ImageView showPassword;
     private EditText edtUsername;
-    private TextView btnRegister;
+    private TextView tvRegister;
     private Button btnLogin;
     private ProgressBar spinner;
     private View vGmail;
     private View vFacebook;
-
     private GoogleSignInOptions googleSignInOptions;
     private GoogleSignInClient googleSignInClient;
-
-    CallbackManager callbackManager;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -126,14 +123,14 @@ public class LoginFragment extends Fragment {
         edtPassword = (EditText) view.findViewById(R.id.edtPassword);
         showPassword = (ImageView) view.findViewById(R.id.btnShowPassword);
         edtUsername = view.findViewById(R.id.edtUsername);
-        btnRegister = view.findViewById(R.id.tvRegister);
+        tvRegister = view.findViewById(R.id.tvRegister);
         btnLogin = view.findViewById(R.id.btnLogin);
         spinner = view.findViewById(R.id.progressBar);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View childView) {
                 spinner.setVisibility(View.VISIBLE);
-                btnRegister.setEnabled(false);
+                tvRegister.setEnabled(false);
                 btnLogin.setEnabled(false);
                 edtUsername.setEnabled(false);
                 edtPassword.setEnabled(false);
@@ -149,12 +146,13 @@ public class LoginFragment extends Fragment {
 
                                 }
                             }).show();
+                } else {
+                    login(username, password);
                 }
-                login(username, password);
             }
         });
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
@@ -175,7 +173,7 @@ public class LoginFragment extends Fragment {
 
         //Login with Facebook
         vFacebook = view.findViewById(R.id.vFacebook);
-        //loginWithFacebook();
+//        loginWithFacebook();
     }
 
     public void ShowHidePass(ImageView showPassword) {
@@ -238,7 +236,7 @@ public class LoginFragment extends Fragment {
                                 startActivity(intent);
                                 ((Activity) getActivity()).finish();
                             } else {
-                                btnRegister.setEnabled(true);
+                                tvRegister.setEnabled(true);
                                 btnLogin.setEnabled(true);
                                 edtUsername.setEnabled(true);
                                 edtPassword.setEnabled(true);
@@ -263,11 +261,11 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void loginWithGmail(){
+    public void loginWithGmail() {
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
-        if(googleSignInAccount!=null){
+        if (googleSignInAccount != null) {
             navigateMainDisplayProducts();
         }
 
@@ -279,10 +277,10 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void loginWithFacebook(){
+    public void loginWithFacebook() {
         callbackManager = CallbackManager.Factory.create();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if(accessToken!=null && accessToken.isExpired()==false){
+        if (accessToken != null && accessToken.isExpired() == false) {
             navigateMainDisplayProducts();
         }
         vFacebook.setOnClickListener(new View.OnClickListener() {
@@ -310,7 +308,8 @@ public class LoginFragment extends Fragment {
             }
         });
     }
-    public void signIn(){
+
+    public void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1000);
     }
@@ -320,9 +319,8 @@ public class LoginFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         //callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1000){
+        if (requestCode == 1000) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
             try {
                 task.getResult(ApiException.class);
                 navigateMainDisplayProducts();
@@ -332,8 +330,9 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    void navigateMainDisplayProducts(){
-        Intent intent = new Intent(getActivity(),MainDisplayProducts.class);
+    void navigateMainDisplayProducts() {
+        Intent intent = new Intent(getActivity(), Home.class);
         startActivity(intent);
+        getActivity().finish();
     }
 }

@@ -2,6 +2,7 @@ package tdtu.edu.vn.finalproject_suppermarket;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import tdtu.edu.vn.finalproject_suppermarket.Notification.DisplayNotification;
@@ -18,10 +23,20 @@ public class Home extends AppCompatActivity {
     BottomNavigationView navbar;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private GoogleSignInOptions googleSignInOptions;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Google Signin
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (googleSignInAccount != null) {
+            Toast.makeText(this, googleSignInAccount.getDisplayName() + "//" + googleSignInAccount.getEmail(), Toast.LENGTH_SHORT).show();
+        }
+
         setContentView(R.layout.home);
         navbar = findViewById(R.id.navBar);
         fragmentManager = getSupportFragmentManager();
