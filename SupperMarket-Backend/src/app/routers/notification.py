@@ -51,3 +51,17 @@ async def notifications():
 
 def get_as_base64(url):
     return base64.b64encode(requests.get(url).content)
+
+
+@router.get("/get-notification")
+async def get_notification(notificationID: str):
+    notifications = notification_collection.find_one(
+        {"id": notificationID}, {"_id": 0}
+    )
+
+    status = notifications != None
+    return {"status": status, "data": notifications}
+
+
+def get_as_base64(url):
+    return base64.b64encode(requests.get(url).content)

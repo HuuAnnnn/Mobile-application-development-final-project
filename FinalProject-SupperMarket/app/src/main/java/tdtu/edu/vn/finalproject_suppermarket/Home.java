@@ -1,6 +1,7 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -16,6 +17,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import tdtu.edu.vn.finalproject_suppermarket.Notification.DisplayNotification;
 import tdtu.edu.vn.finalproject_suppermarket.Products.DisplayMainProduct;
 
@@ -34,7 +48,7 @@ public class Home extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (googleSignInAccount != null) {
-            Toast.makeText(this, googleSignInAccount.getDisplayName() + "//" + googleSignInAccount.getEmail(), Toast.LENGTH_SHORT).show();
+            register(googleSignInAccount.getEmail());
         }
 
         setContentView(R.layout.home);
@@ -62,6 +76,67 @@ public class Home extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public void register(String username) {
+        OkHttpClient client = new OkHttpClient();
+        String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/register";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+            jsonObject.put("first_name", "");
+            jsonObject.put("last_name", "");
+            jsonObject.put("phone_number", "");
+            jsonObject.put("password", "");
+            jsonObject.put("gender", "");
+            jsonObject.put("city", "");
+            jsonObject.put("district", "");
+            jsonObject.put("ward", "");
+            jsonObject.put("address", "");
+            jsonObject.put("type_of_address", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(LOGIN_ENDPOINT)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                String responseData = response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject json = new JSONObject(responseData);
+                            boolean isRegistered = json.getBoolean("status");
+                            if (isRegistered) {
+                                Toast.makeText(Home.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.d("onResponse", e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleSignInClient.signOut();
     }
 
     private void addNewFragment(Fragment fragment) {

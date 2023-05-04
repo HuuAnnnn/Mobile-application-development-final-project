@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
 from ..model.login import LoginDTO
+from ..model.registerDTO import RegisterDTO
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -49,19 +50,18 @@ async def information(username: str):
 
 
 @router.post("/register")
-async def register(
-    username: str,
-    first_name: str,
-    last_name: str,
-    phone_number: str,
-    password: str,
-    gender: str,
-    city: str,
-    district: str,
-    ward: str,
-    address: str,
-    type_of_address: str = "1",
-):
+async def register(registerDTO: RegisterDTO):
+    username = registerDTO.username
+    first_name = registerDTO.first_name
+    last_name = registerDTO.last_name
+    phone_number = registerDTO.phone_number
+    password = registerDTO.password
+    gender = registerDTO.gender
+    city = registerDTO.city
+    district = registerDTO.district
+    ward = registerDTO.ward
+    address = registerDTO.address
+    type_of_address = registerDTO.type_of_address
     if is_exists_user(username):
         return {"status": False, "message": "User is already exists"}
 

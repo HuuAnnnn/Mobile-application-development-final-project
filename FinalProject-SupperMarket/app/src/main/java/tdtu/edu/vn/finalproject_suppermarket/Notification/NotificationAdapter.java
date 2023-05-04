@@ -40,8 +40,8 @@ public class NotificationAdapter<E> extends RecyclerView.Adapter<NotificationVie
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         Notification notification = (Notification) data.get(position);
+        holder.id = notification.getId();
         holder.displayNotificationTitle.setText(notification.getTitle());
-        holder.displayNotificationContent.setText(notification.getContent());
         holder.displayNotificationDateCreate.setText(notification.getDateCreate());
 
         byte[] decodedString = Base64.decode(notification.getImage(), Base64.DEFAULT);
