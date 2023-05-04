@@ -264,7 +264,7 @@ public class LoginFragment extends Fragment {
                                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                             }
-                                        }).show();
+                                        }).show().dismiss();
                             }
                         } catch (JSONException e) {
                             Log.d("onResponse", e.getMessage());

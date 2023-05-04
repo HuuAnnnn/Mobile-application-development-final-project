@@ -4,14 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +46,8 @@ public class UserInformation extends Fragment {
     private String mParam1;
     private String mParam2;
     private LinearLayout btnSignOut;
-
+    private TextView tvInforUsername;
+    private TextView tvInforFullname;
     public UserInformation() {
         // Required empty public constructor
     }
@@ -78,8 +96,64 @@ public class UserInformation extends Fragment {
                 signOut();
             }
         });
+        displayInformation();
     }
 
+    public void displayInformation(){
+        tvInforUsername = getView().findViewById(R.id.tvInforusername);
+        tvInforFullname = getView().findViewById(R.id.tvInforfullname);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        tvInforUsername.setText(username);
+        OkHttpClient client = new OkHttpClient();
+        String GET_INFOR = "https://suppermarket-api.fly.dev/user/information";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(GET_INFOR)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                try {
+                    String responseData = response.body().string();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseData);
+                                JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
+                                String fullname = jsonArray.getJSONObject(0).getString("first_name")+jsonArray.getJSONObject(0).getString("last_name");
+                                tvInforUsername.setText(username);
+                                tvInforFullname.setText(fullname);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    });
+                }catch (Exception e){
+
+                }
+            }
+        });
+    }
     public void signOut() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

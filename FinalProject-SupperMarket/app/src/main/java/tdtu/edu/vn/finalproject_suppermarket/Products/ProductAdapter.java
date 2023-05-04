@@ -29,6 +29,7 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
             for (int i = 0; i < data.size(); i++) {
                 this.data.add(data.get(i));
                 notifyItemInserted(getItemCount());
+                notifyDataSetChanged();
             }
         } else { //clear all
             this.data.clear();
