@@ -1,5 +1,7 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import static com.google.android.gms.common.util.CollectionUtils.listOf;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,11 +18,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -57,7 +74,13 @@ public class LoginFragment extends Fragment {
     private TextView btnRegister;
     private Button btnLogin;
     private ProgressBar spinner;
+    private View vGmail;
+    private View vFacebook;
 
+    private GoogleSignInOptions googleSignInOptions;
+    private GoogleSignInClient googleSignInClient;
+
+    CallbackManager callbackManager;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -145,6 +168,14 @@ public class LoginFragment extends Fragment {
                 ShowHidePass(showPassword);
             }
         });
+
+        //Login with Gmail
+        vGmail = view.findViewById(R.id.vGmail);
+        loginWithGmail();
+
+        //Login with Facebook
+        vFacebook = view.findViewById(R.id.vFacebook);
+        //loginWithFacebook();
     }
 
     public void ShowHidePass(ImageView showPassword) {
@@ -230,5 +261,79 @@ public class LoginFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void loginWithGmail(){
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
+        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
+        if(googleSignInAccount!=null){
+            navigateMainDisplayProducts();
+        }
+
+        vGmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
+    }
+
+    public void loginWithFacebook(){
+        callbackManager = CallbackManager.Factory.create();
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if(accessToken!=null && accessToken.isExpired()==false){
+            navigateMainDisplayProducts();
+        }
+        vFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(getActivity(), listOf("email", "public_profile"));
+            }
+        });
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getContext(), "be cancel", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(getContext(), "be error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void signIn(){
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, 1000);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1000){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                task.getResult(ApiException.class);
+                navigateMainDisplayProducts();
+            } catch (ApiException e) {
+                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    void navigateMainDisplayProducts(){
+        Intent intent = new Intent(getActivity(),MainDisplayProducts.class);
+        startActivity(intent);
     }
 }

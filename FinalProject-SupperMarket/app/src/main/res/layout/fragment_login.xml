@@ -148,7 +148,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btnLogin"></View>
 
         <View
-            android:id="@+id/imvGmail"
+            android:id="@+id/vGmail"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="36dp"
@@ -171,7 +171,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btnLogin"></View>
 
         <View
-            android:id="@+id/imvFacebook"
+            android:id="@+id/vFacebook"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="98dp"
