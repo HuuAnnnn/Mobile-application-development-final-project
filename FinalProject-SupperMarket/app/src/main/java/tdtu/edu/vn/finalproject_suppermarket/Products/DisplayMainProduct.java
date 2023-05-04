@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +32,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import tdtu.edu.vn.finalproject_suppermarket.Cart.DisplayProductCart;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 /**
@@ -90,6 +93,8 @@ public class DisplayMainProduct extends Fragment {
         return inflater.inflate(R.layout.fragment_display_main_products, container, false);
     }
 
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -97,7 +102,6 @@ public class DisplayMainProduct extends Fragment {
         spinner = view.findViewById(R.id.progressBar);
         spinner.bringToFront();
         loadProducts();
-
         inputSearch = view.findViewById(R.id.inputSearch);
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -134,44 +138,30 @@ public class DisplayMainProduct extends Fragment {
             @Override
             public void onResponse(Call call, final Response response)
                     throws IOException {
-                try {
                     String responseData = response.body().string();
-                    JSONObject json = new JSONObject(responseData);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean isSuccess = false;
-                            try {
-                                isSuccess = json.getBoolean("status");
-                                if (!isSuccess) {
-                                    Toast.makeText(getContext(), "Không thể tải sản phẩm! Vui lòng kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    ArrayList<Product> products = new ArrayList<Product>();
-                                    JSONArray data = json.getJSONArray("data");
-                                    for (int i = 0; i < data.length(); i++) {
-                                        JSONObject jsonObject = data.getJSONObject(i);
-                                        Product product = new Product(
-                                                jsonObject.getString("id"),
-                                                jsonObject.getString("name"),
-                                                jsonObject.getString("origin"),
-                                                jsonObject.getString("description"),
-                                                jsonObject.getString("category"),
-                                                jsonObject.getInt("price"),
-                                                jsonObject.getString("image")
-                                        );
-                                        Toast.makeText(getContext(), jsonObject.getString("name"), Toast.LENGTH_SHORT).show();
-                                        products.add(product);
-                                    }
-                                    productAdapter.updateData(products);
-                                    spinner.setVisibility(View.INVISIBLE);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(responseData);
+                    ArrayList<Product> products = new ArrayList<Product>();
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        jsonObject = data.getJSONObject(i);
+                        Product product = new Product(
+                                jsonObject.getString("id"),
+                                jsonObject.getString("name"),
+                                jsonObject.getString("origin"),
+                                jsonObject.getString("description"),
+                                jsonObject.getString("category"),
+                                jsonObject.getInt("price"),
+                                jsonObject.getString("image")
+                        );
+                        products.add(product);
+                    }
+                    displayAllProducts.setAdapter(new ProductAdapter<Product>(getActivity(), products));
+                    spinner.setVisibility(View.INVISIBLE);
                 } catch (JSONException e) {
                     Log.d("onResponse", e.getMessage());
+                    throw new RuntimeException(e);
                 }
             }
         });

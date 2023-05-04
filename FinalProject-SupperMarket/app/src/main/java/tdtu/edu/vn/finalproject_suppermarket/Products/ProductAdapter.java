@@ -24,9 +24,16 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
         inflater = LayoutInflater.from(context);
     }
 
-    public void updateData(ArrayList<E> data) {
-        this.data = data;
-        notifyDataSetChanged();
+    public void updateData(ArrayList<E> data, int flag) {
+        if (flag == 0) { //append
+            for (int i = 0; i < data.size(); i++) {
+                this.data.add(data.get(i));
+                notifyItemInserted(getItemCount());
+            }
+        } else { //clear all
+            this.data.clear();
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull

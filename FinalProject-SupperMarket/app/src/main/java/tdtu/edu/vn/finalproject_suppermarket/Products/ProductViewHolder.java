@@ -3,22 +3,29 @@ package tdtu.edu.vn.finalproject_suppermarket.Products;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,6 +34,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import tdtu.edu.vn.finalproject_suppermarket.Cart.DisplayProductCart;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -38,7 +46,11 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
     ImageView displayProductImage;
     Button btnAddToCart;
     ImageButton btnLikeProduct;
-
+    ImageButton btnShoppingCart;
+     EditText inputSearch;
+     ProductAdapter<Product> productAdapter;
+     RecyclerView displayAllProducts;
+     ProgressBar spinner;
     public ProductViewHolder(@NonNull View itemView) {
         super(itemView);
         displayProductName = itemView.findViewById(R.id.displayProductName);
@@ -49,6 +61,10 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
         displayProductImage = itemView.findViewById(R.id.displayProductImage);
         btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         btnLikeProduct = itemView.findViewById(R.id.btnLikeProduct);
+        btnShoppingCart = itemView.findViewById(R.id.btnShoppingCart);
+        displayAllProducts = itemView.findViewById(R.id.displayProducts);
+        spinner = itemView.findViewById(R.id.progressBar);
+
         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
