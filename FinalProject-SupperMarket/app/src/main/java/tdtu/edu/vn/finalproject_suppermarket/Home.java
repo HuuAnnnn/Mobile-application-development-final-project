@@ -72,6 +72,9 @@ public class Home extends AppCompatActivity {
                     case R.id.notification:
                         addNewFragment(new DisplayNotification());
                         break;
+                    case R.id.scan:
+                        addNewFragment(new QRCode());
+                        break;
                 }
                 return true;
             }
