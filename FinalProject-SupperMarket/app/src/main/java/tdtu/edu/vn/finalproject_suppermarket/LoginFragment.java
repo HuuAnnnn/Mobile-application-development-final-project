@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -156,7 +157,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-                mviewPager.setCurrentItem(RegisterFragment.ID);
+                mviewPager.setCurrentItem(1);
             }
         });
 
@@ -266,13 +267,64 @@ public class LoginFragment extends Fragment {
         googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
         if (googleSignInAccount != null) {
-            navigateMainDisplayProducts();
+            String personName = googleSignInAccount.getDisplayName();
+            String personEmail = googleSignInAccount.getEmail();
+            String personId = googleSignInAccount.getId();
+            register(personEmail, personName, personId);
+            login(personEmail, personId);
         }
 
         vGmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
+            }
+        });
+    }
+
+    public void register(String username, String lastname, String password) {
+        OkHttpClient client = new OkHttpClient();
+        String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/register";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+            jsonObject.put("first_name", "");
+            jsonObject.put("last_name", lastname);
+            jsonObject.put("phone_number", "");
+            jsonObject.put("password", password);
+            jsonObject.put("gender", "");
+            jsonObject.put("city", "");
+            jsonObject.put("district", "");
+            jsonObject.put("ward", "");
+            jsonObject.put("address", "");
+            jsonObject.put("type_of_address", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(LOGIN_ENDPOINT)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                String responseData = response.body().string();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
             }
         });
     }

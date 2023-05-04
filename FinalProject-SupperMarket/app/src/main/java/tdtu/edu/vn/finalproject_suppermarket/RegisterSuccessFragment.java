@@ -29,7 +29,8 @@ public class RegisterSuccessFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private MaterialButton btnBackHome;
+    private MaterialButton btnBackLogin;
+    ViewPager viewPager;
 
     public RegisterSuccessFragment() {
         // Required empty public constructor
@@ -77,12 +78,12 @@ public class RegisterSuccessFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnBackHome = view.findViewById(R.id.btnBackHome);
-        btnBackHome.setOnClickListener(new View.OnClickListener() {
+        btnBackLogin = view.findViewById(R.id.btnBackHome);
+        btnBackLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-                mviewPager.setCurrentItem(0);
+                viewPager = getActivity().findViewById(R.id.viewPager);
+                viewPager.setCurrentItem(0);
             }
         });
     }

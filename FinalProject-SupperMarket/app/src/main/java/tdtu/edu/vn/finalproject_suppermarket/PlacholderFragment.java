@@ -100,6 +100,7 @@ public class PlacholderFragment extends Fragment implements SwitchFragmentInterf
         getChildFragmentManager().beginTransaction().
                 replace(R.id.container, fragment).
                 commit();
+
     }
 
     @Override

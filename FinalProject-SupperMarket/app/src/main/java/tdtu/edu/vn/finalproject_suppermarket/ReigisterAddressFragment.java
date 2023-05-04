@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -105,6 +107,8 @@ public class ReigisterAddressFragment extends Fragment{
     List<Province> listProvince = new ArrayList<>();
     List<Districts> listDistricts = new ArrayList<>();
     List<Ward> listWard = new ArrayList<>();
+
+    private EditText editText;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
