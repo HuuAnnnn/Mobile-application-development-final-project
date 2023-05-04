@@ -4,9 +4,10 @@ import static com.google.android.gms.common.util.CollectionUtils.listOf;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -44,6 +45,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -127,6 +135,10 @@ public class LoginFragment extends Fragment {
         tvRegister = view.findViewById(R.id.tvRegister);
         btnLogin = view.findViewById(R.id.btnLogin);
         spinner = view.findViewById(R.id.progressBar);
+        if (!isExpiredLogin()) {
+            navigateMainDisplayProducts();
+        }
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View childView) {
@@ -234,6 +246,7 @@ public class LoginFragment extends Fragment {
                             boolean isLogged = json.getBoolean("status");
                             if (isLogged) {
                                 Intent intent = new Intent(getActivity(), Home.class);
+                                saveSession(username);
                                 startActivity(intent);
                                 ((Activity) getActivity()).finish();
                             } else {
@@ -280,6 +293,51 @@ public class LoginFragment extends Fragment {
                 signIn();
             }
         });
+    }
+
+    public void saveSession(String username) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            String dateLogin = dtf.format(now);
+            editor.putString("username", username);
+            editor.putString("dateLogin", dateLogin);
+            editor.commit();
+        }
+    }
+
+    public boolean isExpiredLogin() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        if (sharedPreferences.getString("username", "").equals("")) {
+            return true;
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.ENGLISH);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            String currentDateTime = dtf.format(now);
+            try {
+                Date firstDate = sdf.parse(currentDateTime);
+                Date secondDate = sdf.parse(sharedPreferences.getString("dateLogin", "01/01/2023 0:0:0"));
+
+                long diffInMillies = Math.abs(firstDate.getTime() - secondDate.getTime());
+                long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                final int LIMIT_DATETIME = 180;
+                if (diff >= LIMIT_DATETIME) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("username", "");
+                    editor.putString("dateLogin", "");
+                    editor.commit();
+
+                    return true;
+                }
+            } catch (ParseException e) {
+                Log.d("Login", e.getMessage());
+            }
+        }
+        return false;
     }
 
     public void register(String username, String lastname, String password) {

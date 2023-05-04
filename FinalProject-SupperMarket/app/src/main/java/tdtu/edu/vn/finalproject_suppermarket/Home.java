@@ -1,5 +1,7 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,6 +53,7 @@ public class Home extends AppCompatActivity {
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (googleSignInAccount != null) {
             register(googleSignInAccount.getEmail());
+            saveSession(googleSignInAccount.getEmail());
         }
 
         setContentView(R.layout.home);
@@ -79,6 +84,19 @@ public class Home extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public void saveSession(String username) {
+        SharedPreferences sharedPreferences = getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            String dateLogin = dtf.format(now);
+            editor.putString("username", username);
+            editor.putString("dateLogin", dateLogin);
+            editor.commit();
+        }
     }
 
     public void register(String username) {

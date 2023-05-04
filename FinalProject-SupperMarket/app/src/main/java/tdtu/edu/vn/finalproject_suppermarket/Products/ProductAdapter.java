@@ -41,7 +41,7 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = (Product) data.get(position);
         holder.displayProductId.setText("ID: " + product.getId());
-        holder.displayProductName.setText("Tên: " + product.getName());
+        holder.displayProductName.setText(product.getName());
         holder.displayProductOrigin.setText("Nguồn gốc: " + product.getOrigin());
         holder.displayProductDescription.setText(product.getDescription());
         holder.displayProductPrice.setText("Giá: " + String.valueOf(product.getPrice()));

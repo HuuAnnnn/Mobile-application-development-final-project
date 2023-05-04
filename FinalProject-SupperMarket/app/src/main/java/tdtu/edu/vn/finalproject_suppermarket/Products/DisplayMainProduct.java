@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -52,6 +51,7 @@ public class DisplayMainProduct extends Fragment {
     private RecyclerView displayAllProducts;
     private ProgressBar spinner;
     private EditText inputSearch;
+
     public DisplayMainProduct() {
         // Required empty public constructor
     }
@@ -112,14 +112,14 @@ public class DisplayMainProduct extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String keyword = inputSearch.getText().toString().trim();
-                if(!keyword.equals("")){
+                if (!keyword.equals("")) {
                     searchProducts(keyword);
                 }
             }
         });
     }
 
-    public void searchProducts(String keyword){
+    public void searchProducts(String keyword) {
         OkHttpClient client = new OkHttpClient();
         String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
         Toast.makeText(getContext(), findProductString, Toast.LENGTH_SHORT).show();
@@ -160,12 +160,9 @@ public class DisplayMainProduct extends Fragment {
                                                 jsonObject.getString("image")
                                         );
                                         Toast.makeText(getContext(), jsonObject.getString("name"), Toast.LENGTH_SHORT).show();
-
                                         products.add(product);
                                     }
-                                    productAdapter = new ProductAdapter<Product>(getActivity(), products);
-                                    displayAllProducts.setAdapter(productAdapter);
-                                    displayAllProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                    productAdapter.updateData(products);
                                     spinner.setVisibility(View.INVISIBLE);
                                 }
                             } catch (JSONException e) {
@@ -179,6 +176,7 @@ public class DisplayMainProduct extends Fragment {
             }
         });
     }
+
     public void loadProducts() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(GET_PRODUCTS_ENDPOINTS).build();
