@@ -42,7 +42,7 @@ import tdtu.edu.vn.finalproject_suppermarket.R;
  * Use the {@link DisplayProductCart#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DisplayProductCart extends Fragment {
+public class DisplayProductCart extends Fragment implements OnDataChangeListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,6 +106,12 @@ public class DisplayProductCart extends Fragment {
         spinner = view.findViewById(R.id.cartProgressBar);
         spinner.bringToFront();
 
+        productCartAdapter = new ProductCartAdapter(getContext(), new ArrayList<ProductCart>());
+        productCartAdapter.setOnDataChangedListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        displayProductCart.setLayoutManager(layoutManager);
+        displayProductCart.setHasFixedSize(true);
+        displayProductCart.setAdapter(productCartAdapter);
         btnCartBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,11 +177,7 @@ public class DisplayProductCart extends Fragment {
                                 }
 
                                 Toast.makeText(getContext(), productCartList.size() + "", Toast.LENGTH_SHORT).show();
-
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                                displayProductCart.setLayoutManager(layoutManager);
-                                displayProductCart.setHasFixedSize(true);
-                                displayProductCart.setAdapter(new ProductCartAdapter(getContext(), productCartList));
+                                productCartAdapter.updateData(productCartList);
                             } else {
                                 Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
                             }
@@ -186,5 +188,24 @@ public class DisplayProductCart extends Fragment {
                 });
             }
         });
+    }
+
+    @Override
+    public void onDataChanged(String data) {
+        tvTotalPrice.setText(data);
+    }
+
+    @Override
+    public void startChange(boolean state) {
+        if (state) {
+            spinner.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void endChange(boolean state) {
+        if (state) {
+            spinner.setVisibility(View.INVISIBLE);
+        }
     }
 }

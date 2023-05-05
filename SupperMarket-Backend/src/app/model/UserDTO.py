@@ -1,4 +1,10 @@
 from pydantic import BaseModel
 
+
 class UserInformationDTO(BaseModel):
-  username : str
+    username: str
+
+
+class ChangePasswordDTO(BaseModel):
+    username: str
+    newPassword: str

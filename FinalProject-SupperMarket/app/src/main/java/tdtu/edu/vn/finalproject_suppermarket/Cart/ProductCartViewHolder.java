@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 public class ProductCartViewHolder extends RecyclerView.ViewHolder {
-     TextView tvProductName;
-     TextView tvProductId;
-     TextView tvQuantity;
-     TextView tvAdd;
-     TextView tvSub;
-     TextView tvProductPrice;
-     ImageView imvProductImage;
+    TextView tvProductName;
+    TextView tvProductId;
+    TextView tvQuantity;
+    TextView tvAdd;
+    TextView tvSub;
+    TextView tvProductPrice;
+    ImageView imvProductImage;
+
     public ProductCartViewHolder(@NonNull View itemView) {
         super(itemView);
         tvProductName = itemView.findViewById(R.id.tvProductName);

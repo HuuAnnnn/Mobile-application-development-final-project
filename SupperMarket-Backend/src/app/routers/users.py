@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
 from ..model.login import LoginDTO
 from ..model.registerDTO import RegisterDTO
-from ..model.UserDTO import UserInformationDTO
+from ..model.UserDTO import UserInformationDTO, ChangePasswordDTO
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -83,3 +83,16 @@ async def register(registerDTO: RegisterDTO):
 
     user_collection.insert_one(user_information)
     return {"status": True, "message": "Register successfully"}
+
+
+@router.post("/change-password")
+async def change_password(changePassword: ChangePasswordDTO):
+    username = changePassword.username
+    new_password = changePassword.newPassword
+
+    query = {"username": username}
+    update_password = {"$set": {"password": new_password}}
+
+    user_collection.update_one(query, update_password)
+
+    return {"status": True, "message": "Update password successfully"}

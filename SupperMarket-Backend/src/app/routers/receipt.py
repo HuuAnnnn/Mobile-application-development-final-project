@@ -116,3 +116,46 @@ async def get_cart(userInformationDTO: UserInformationDTO):
         "total": total,
         "cart": user_cart,
     }
+
+
+@router.post("/update-quantity")
+async def update_quantity(updateQuantity: AddToCart):
+    username = updateQuantity.username
+    product_id = updateQuantity.product_id
+    quantity = updateQuantity.quantity
+
+    current_receipt = receipt_collection.find_one(
+        {"username": username, "state": "unpaid"}, {"_id": 0}
+    )
+
+    receipt_id = current_receipt["id"]
+
+    product_price = product_collection.find_one(
+        {"id": product_id}, {"_id": 0}
+    )["price"]
+
+    exist_receipt = receipt_line_collection.find_one(
+        {"id": receipt_id, "product_id": product_id}, {"_id": 0}
+    )
+    receipt_line_index = {
+        "$set": {
+            "quantity": quantity,
+            "price": product_price * quantity,
+        }
+    }
+
+    receipt_line_collection.update_one(
+        {"id": receipt_id, "product_id": product_id}, receipt_line_index
+    )
+
+    all_receipt_line = receipt_line_collection.find(
+        {"id": receipt_id}, {"_id": 0}
+    )
+    total = 0
+    for receipt_line in all_receipt_line:
+        total += receipt_line["price"]
+
+    receipt_index = {"$set": {"total": total}}
+    receipt_collection.update_one({"id": receipt_id}, receipt_index)
+
+    return {"state": True, "message": "Update successfully"}
