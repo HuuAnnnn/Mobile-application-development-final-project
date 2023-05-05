@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import tdtu.edu.vn.finalproject_suppermarket.Cart.ShoppingCart;
+import tdtu.edu.vn.finalproject_suppermarket.ChooseAddressActivity;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 /**
@@ -60,6 +62,7 @@ public class DisplayMainProduct extends Fragment {
     private ProgressBar spinner;
     private EditText inputSearch;
     private ImageButton btnShoppingCart;
+    private TextView updateDeliveryAddress;
 
     public DisplayMainProduct() {
         // Required empty public constructor
@@ -109,6 +112,14 @@ public class DisplayMainProduct extends Fragment {
         productAdapter = new ProductAdapter<>(getContext(), productArrayList);
         btnShoppingCart = view.findViewById(R.id.btnShoppingCart);
         inputSearch = view.findViewById(R.id.inputSearch);
+        updateDeliveryAddress = view.findViewById(R.id.updateDeliveryAddress);
+        updateDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChooseAddressActivity.class);
+                startActivity(intent);
+            }
+        });
         loadProducts();
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,8 +186,15 @@ public class DisplayMainProduct extends Fragment {
                                 );
                                 productArrayList.add(product);
                             }
-                            productAdapter.updateData(productArrayList, 0);
-                            displayAllProducts.setAdapter(productAdapter);
+                            getActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    productAdapter.updateData(productArrayList, 0);
+
+                                }
+                            });
                             spinner.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {
                             Log.d("onResponse", e.getMessage());
