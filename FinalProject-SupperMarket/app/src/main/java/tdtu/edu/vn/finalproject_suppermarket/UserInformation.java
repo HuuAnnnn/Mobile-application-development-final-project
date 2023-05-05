@@ -127,7 +127,6 @@ public class UserInformation extends Fragment {
         tvInforFullname = getView().findViewById(R.id.tvInforfullname);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
-        tvInforUsername.setText(username);
         OkHttpClient client = new OkHttpClient();
         String GET_INFOR = "https://suppermarket-api.fly.dev/user/information";
         JSONObject jsonObject = new JSONObject();

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -39,14 +40,22 @@ public class ProductHistoryActivity extends AppCompatActivity {
     private ProductHistoryAdapter productHistoryAdapter;
     private ArrayList<ProductHistory> productArrayList;
     private RecyclerView displayAllProductsHistory;
-    private ProgressBar spinner;
-
+    private ProgressBar progressBar;
+    private ImageButton btnHistoryBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_history);
         displayAllProductsHistory = findViewById(R.id.historyRecyclerView);
         loadProductsHistory();
+        progressBar = findViewById(R.id.progressBar);
+        btnHistoryBack = findViewById(R.id.btnHistoryBack);
+        btnHistoryBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProductHistoryActivity.this.finish();
+            }
+        });
     }
 
     public void loadProductsHistory() {
@@ -104,7 +113,7 @@ public class ProductHistoryActivity extends AppCompatActivity {
                                 productHistoryAdapter = new ProductHistoryAdapter(ProductHistoryActivity.this, productHistories);
                                 displayAllProductsHistory.setAdapter(productHistoryAdapter);
                                 displayAllProductsHistory.setLayoutManager(new LinearLayoutManager(ProductHistoryActivity.this));
-
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
 
