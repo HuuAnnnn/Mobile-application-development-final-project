@@ -189,7 +189,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
             <RadioGroup
-                android:id="@+id/rdgGender"
+                android:id="@+id/rdgTypeHome"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
                 android:orientation="horizontal">
