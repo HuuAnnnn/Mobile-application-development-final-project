@@ -36,6 +36,16 @@ async def add_to_cart(addToCartDTO: AddToCart):
         receipt_id = (
             f"{datetime.now().strftime('%d%m%Y')}{str(index + 1).zfill(3)}"
         )
+
+        receipt_new = {
+            "id": receipt_id,
+            "username": username,
+            "total": 0,
+            "state": "unpaid",
+            "dateEstablished": datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
+        }
+
+        receipt_collection.insert_one(receipt_new)
     else:
         receipt_id = current_receipt["id"]
 
@@ -166,3 +176,44 @@ async def update_quantity(updateQuantity: AddToCart):
         )
 
     return {"state": True, "message": "Update successfully"}
+
+
+@router.post("/history")
+async def get_history(userInformationDTO: UserInformationDTO):
+    username = userInformationDTO.username
+    receipts = receipt_collection.find(
+        {"username": username, "state": "pay"}, {"_id": 0}
+    )
+
+    history_transactions = []
+
+    for receipt in receipts:
+        receipt_id = receipt["id"]
+        cart = receipt_line_collection.find({"id": receipt_id}, {"_id": 0})
+        for product in cart:
+            product_id = product["product_id"]
+            product_in_cart = product_collection.find_one(
+                {"id": product_id}, {"_id": 0}
+            )
+            history_transactions.append(
+                {
+                    "product": product_in_cart,
+                    "quantity": product["quantity"],
+                    "price": product["price"],
+                }
+            )
+
+    status = history_transactions != []
+    return {
+        "status": status,
+        "history": history_transactions,
+    }
+
+
+@router.post("/checkout")
+async def checkout(userInformationDTO: UserInformationDTO):
+    username = userInformationDTO.username
+    receipt = {"username": username, "state": "unpaid"}
+    update_state = {"$set": {"state": "pay"}}
+    receipt_collection.update_one(receipt, update_state)
+    return {"status": True, "message": "Checkout successfully"}

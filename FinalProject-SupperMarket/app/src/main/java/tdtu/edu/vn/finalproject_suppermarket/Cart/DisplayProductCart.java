@@ -1,12 +1,14 @@
 package tdtu.edu.vn.finalproject_suppermarket.Cart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,6 +60,7 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
     private TextView tvTotalPrice;
     private ImageButton btnCartBack;
     private ProgressBar spinner;
+    private Button placeOrderButton;
 
     public DisplayProductCart() {
         // Required empty public constructor
@@ -105,6 +108,14 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
         btnCartBack = view.findViewById(R.id.btnCartBack);
         spinner = view.findViewById(R.id.cartProgressBar);
         spinner.bringToFront();
+
+        placeOrderButton = view.findViewById(R.id.placeOrderButton);
+        placeOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkout();
+            }
+        });
 
         productCartAdapter = new ProductCartAdapter(getContext(), new ArrayList<ProductCart>());
         productCartAdapter.setOnDataChangedListener(this);
@@ -176,11 +187,64 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
                                             product.getString("image")));
                                 }
 
-                                Toast.makeText(getContext(), productCartList.size() + "", Toast.LENGTH_SHORT).show();
                                 productCartAdapter.updateData(productCartList);
                             } else {
                                 Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
                             }
+                        } catch (JSONException e) {
+                            Log.d("onResponse", e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkout() {
+        spinner.setVisibility(View.VISIBLE);
+        final String GET_CART_ENDPOINTS = "https://suppermarket-api.fly.dev/cart/checkout";
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        OkHttpClient client = new OkHttpClient();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(GET_CART_ENDPOINTS)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                String responseData = response.body().string();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            spinner.setVisibility(View.INVISIBLE);
+                            Log.d("TEST", responseData);
+                            JSONObject json = new JSONObject(responseData);
+                            boolean isSuccess = json.getBoolean("status");
+                            Intent intent;
+                            if (isSuccess) {
+                                intent = new Intent(getActivity(), CheckoutSuccess.class);
+                            } else {
+                                intent = new Intent(getActivity(), CheckoutFail.class);
+                            }
+                            startActivity(intent);
                         } catch (JSONException e) {
                             Log.d("onResponse", e.getMessage());
                         }
