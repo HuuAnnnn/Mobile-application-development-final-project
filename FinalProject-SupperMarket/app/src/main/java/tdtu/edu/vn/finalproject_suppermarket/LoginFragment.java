@@ -211,11 +211,12 @@ public class LoginFragment extends Fragment {
 
     public void login(String username, String password) {
         OkHttpClient client = new OkHttpClient();
+        String hashPassword = Utils.md5Hash(password);
         String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/login";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("username", username);
-            jsonObject.put("password", password);
+            jsonObject.put("password", hashPassword);
         } catch (JSONException e) {
             e.printStackTrace();
         }

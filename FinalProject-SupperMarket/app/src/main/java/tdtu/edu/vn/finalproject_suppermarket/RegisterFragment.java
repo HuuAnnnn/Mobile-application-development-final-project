@@ -1,20 +1,9 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -52,14 +44,11 @@ public class RegisterFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static int ID = 0;
+    SwitchFragmentInterface mCallback;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    SwitchFragmentInterface mCallback;
-    public static int ID = 0;
-
     private MaterialButton buttonContinue;
     private EditText edtUsername;
     private EditText edtLastname;
@@ -108,7 +97,6 @@ public class RegisterFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -134,7 +122,7 @@ public class RegisterFragment extends Fragment {
                 String phone = edtPhone.getText().toString().trim();
                 int genid = radioGroup.getCheckedRadioButtonId();
                 String gender = "";
-                if(genid==0 || genid==1 || genid ==2) {
+                if (genid == 0 || genid == 1 || genid == 2) {
                     RadioButton radioButton = (RadioButton) view.findViewById(genid);
                     gender = radioButton.getText().toString();
                 }
@@ -149,7 +137,7 @@ public class RegisterFragment extends Fragment {
                                 }
                             }).show();
                 } else {
-                    if(!password.trim().equals(rePassword.trim())){
+                    if (!password.trim().equals(rePassword.trim())) {
                         new AlertDialog.Builder(getContext())
                                 .setTitle("Thông báo")
                                 .setMessage("Vui lòng nhập cùng mật khẩu")
@@ -161,13 +149,14 @@ public class RegisterFragment extends Fragment {
                                 }).show();
                         edtUsername.setText(password);
                         edtFirstname.setText(rePassword);
-                    }else {
+                    } else {
                         register(username, lastname, firstname, phone, password, gender);
                     }
                 }
             }
         });
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,7 +169,7 @@ public class RegisterFragment extends Fragment {
         super.onAttach(context);
 
         try {
-            mCallback = (SwitchFragmentInterface ) getParentFragment();
+            mCallback = (SwitchFragmentInterface) getParentFragment();
         } catch (ClassCastException e) {
 
             throw new ClassCastException(getParentFragment().toString()
@@ -196,6 +185,7 @@ public class RegisterFragment extends Fragment {
 
     public void register(String username, String lastname, String firstname, String phone, String password, String gender) {
         OkHttpClient client = new OkHttpClient();
+        String hashPassword = Utils.md5Hash(password);
         String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/register";
         JSONObject jsonObject = new JSONObject();
         try {
@@ -203,7 +193,7 @@ public class RegisterFragment extends Fragment {
             jsonObject.put("first_name", firstname);
             jsonObject.put("last_name", lastname);
             jsonObject.put("phone_number", phone);
-            jsonObject.put("password", password);
+            jsonObject.put("password", hashPassword);
             jsonObject.put("gender", gender);
             jsonObject.put("city", "");
             jsonObject.put("district", "");

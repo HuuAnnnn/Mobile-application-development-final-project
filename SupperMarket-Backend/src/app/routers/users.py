@@ -2,7 +2,11 @@ from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
 from ..model.login import LoginDTO
 from ..model.registerDTO import RegisterDTO
-from ..model.UserDTO import UserInformationDTO, ChangePasswordDTO
+from ..model.UserDTO import (
+    UserInformationDTO,
+    ChangePasswordDTO,
+    UpdateAddressDTO,
+)
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -96,3 +100,30 @@ async def change_password(changePassword: ChangePasswordDTO):
     user_collection.update_one(query, update_password)
 
     return {"status": True, "message": "Update password successfully"}
+
+
+@router.post("/change-address")
+async def register(updateAddressDTO: UpdateAddressDTO):
+    username = updateAddressDTO.username
+    city = updateAddressDTO.city
+    district = updateAddressDTO.district
+    ward = updateAddressDTO.ward
+    address = updateAddressDTO.address
+    type_of_address = updateAddressDTO.type_of_address
+
+    if not is_exists_user(username):
+        return {"status": False, "message": "User is not exists"}
+
+    address_update = {
+        "city": city,
+        "district": district,
+        "ward": ward,
+        "address": address,
+        "type_of_address": type_of_address,
+    }
+
+    user_collection.update_one(
+        {"username": username}, {"$set": address_update}
+    )
+
+    return {"status": True, "message": "Register successfully"}

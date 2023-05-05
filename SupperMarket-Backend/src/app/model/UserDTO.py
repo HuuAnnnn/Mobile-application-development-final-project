@@ -8,3 +8,12 @@ class UserInformationDTO(BaseModel):
 class ChangePasswordDTO(BaseModel):
     username: str
     newPassword: str
+
+
+class UpdateAddressDTO(BaseModel):
+    username: str
+    city: str
+    district: str
+    ward: str
+    address: str
+    type_of_address: str
