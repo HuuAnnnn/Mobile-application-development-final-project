@@ -1,7 +1,5 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,15 +9,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -36,12 +33,13 @@ public class ChangePassword extends AppCompatActivity {
     private EditText edtPassword;
     private EditText edtRePassword;
     private MaterialButton btnChangePassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         edtPassword = findViewById(R.id.edtPassword);
-        edtRePassword  = findViewById(R.id.edtRePassword);
+        edtRePassword = findViewById(R.id.edtRePassword);
         btnChangePassword = findViewById(R.id.btnChangePassword);
 
         SharedPreferences sharedPreferences = ChangePassword.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
@@ -52,7 +50,7 @@ public class ChangePassword extends AppCompatActivity {
             public void onClick(View childView) {
                 String password = edtPassword.getText().toString().trim();
                 String rePassword = edtRePassword.getText().toString().trim();
-                if ( password.equals("")|| rePassword.equals("")) {
+                if (password.equals("") || rePassword.equals("")) {
                     new AlertDialog.Builder(ChangePassword.this)
                             .setTitle("Thông báo")
                             .setMessage("Vui lòng không để trống các trường")
@@ -63,7 +61,7 @@ public class ChangePassword extends AppCompatActivity {
                                 }
                             }).show();
                 } else {
-                    if(!password.trim().equals(rePassword.trim())){
+                    if (!password.trim().equals(rePassword.trim())) {
                         new AlertDialog.Builder(ChangePassword.this)
                                 .setTitle("Thông báo")
                                 .setMessage("Vui lòng nhập cùng mật khẩu")
@@ -73,8 +71,8 @@ public class ChangePassword extends AppCompatActivity {
 
                                     }
                                 }).show();
-                    }else {
-                        changePassword(username,password);
+                    } else {
+                        changePassword(username, password);
                     }
                 }
             }
@@ -82,12 +80,13 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     public void changePassword(String username, String password) {
+        String hashPassword = Utils.md5Hash(password);
         OkHttpClient client = new OkHttpClient();
         String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/change-password";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("username", username);
-            jsonObject.put("newPassword", password);
+            jsonObject.put("newPassword", hashPassword);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -124,6 +123,7 @@ public class ChangePassword extends AppCompatActivity {
             }
         });
     }
+
     public void signOut() {
         SharedPreferences sharedPreferences = ChangePassword.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

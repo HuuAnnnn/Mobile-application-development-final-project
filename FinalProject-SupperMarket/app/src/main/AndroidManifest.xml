@@ -66,6 +66,31 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".Cart.CheckoutFail"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Promotion.PromotionDisplay"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Cart.CheckoutSuccess"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".AuthActivity"
             android:exported="false" />
         <activity
