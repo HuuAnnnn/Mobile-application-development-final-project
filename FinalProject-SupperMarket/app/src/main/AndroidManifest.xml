@@ -20,26 +20,17 @@
         android:theme="@style/Theme.FinalProjectSupperMarket"
         tools:targetApi="31">
         <activity
-            android:name=".Promotion.PromotionDisplay"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".UserInformationActivity"
+            android:exported="false" />
         <activity
-            android:name=".Cart.CheckoutFail"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".ProductHistory.ProductHistoryActivity"
+            android:exported="false" />
         <activity
-            android:name=".Cart.CheckoutSuccess"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".ChooseAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePassword"
+            android:exported="false" />
         <activity
             android:name=".Cart.ShoppingCart"
             android:exported="false">
@@ -49,27 +40,6 @@
         </activity>
         <activity
             android:name=".DisplayNotificationDetail"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ProductHistory.ProductHistoryActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ChangePassword"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ChooseAddressActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
