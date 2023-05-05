@@ -48,6 +48,7 @@ public class UserInformation extends Fragment {
     private TextView tvInforUsername;
     private TextView tvInforFullname;
 
+    private TextView tvChangePassword;
     public UserInformation() {
         // Required empty public constructor
     }
@@ -97,6 +98,15 @@ public class UserInformation extends Fragment {
             }
         });
         displayInformation();
+
+        tvChangePassword = view.findViewById(R.id.tvChangePassword);
+        tvChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),ChangePassword.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void displayInformation() {
