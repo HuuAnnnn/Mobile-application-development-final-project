@@ -1,7 +1,16 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import androidx.annotation.NonNull;
+
 public class Province {
     private String _id;
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name_with_type;
+    }
+
     private String name_with_type;
     private String code;
 

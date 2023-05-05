@@ -1,10 +1,20 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import androidx.annotation.NonNull;
+
 public class Districts {
     private String _id;
     private String nameWithType;
     private String code;
     private String parentCode;
+
+
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.nameWithType;
+    }
 
     public String get_id() {
         return _id;
