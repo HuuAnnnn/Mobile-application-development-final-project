@@ -137,6 +137,7 @@ async def update_quantity(updateQuantity: AddToCart):
     exist_receipt = receipt_line_collection.find_one(
         {"id": receipt_id, "product_id": product_id}, {"_id": 0}
     )
+
     receipt_line_index = {
         "$set": {
             "quantity": quantity,
@@ -151,11 +152,17 @@ async def update_quantity(updateQuantity: AddToCart):
     all_receipt_line = receipt_line_collection.find(
         {"id": receipt_id}, {"_id": 0}
     )
+
     total = 0
     for receipt_line in all_receipt_line:
         total += receipt_line["price"]
 
     receipt_index = {"$set": {"total": total}}
     receipt_collection.update_one({"id": receipt_id}, receipt_index)
+
+    if quantity == 0:
+        receipt_line_collection.delete_one(
+            {"id": receipt_id, "product_id": product_id}
+        )
 
     return {"state": True, "message": "Update successfully"}
