@@ -28,6 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import tdtu.edu.vn.finalproject_suppermarket.ProductHistory.ProductHistoryActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +49,8 @@ public class UserInformation extends Fragment {
     private TextView tvInforUsername;
     private TextView tvInforFullname;
 
+    private TextView tvHistoryList;
+    private TextView tvChangePassword;
     public UserInformation() {
         // Required empty public constructor
     }
@@ -97,6 +100,26 @@ public class UserInformation extends Fragment {
             }
         });
         displayInformation();
+
+        //change password
+        tvChangePassword = view.findViewById(R.id.tvChangePassword);
+        tvChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),ChangePassword.class);
+                startActivity(intent);
+            }
+        });
+
+        //display history list
+        tvHistoryList = view.findViewById(R.id.tvHistoryList);
+        tvHistoryList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProductHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void displayInformation() {
@@ -104,7 +127,6 @@ public class UserInformation extends Fragment {
         tvInforFullname = getView().findViewById(R.id.tvInforfullname);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
-        tvInforUsername.setText(username);
         OkHttpClient client = new OkHttpClient();
         String GET_INFOR = "https://suppermarket-api.fly.dev/user/information";
         JSONObject jsonObject = new JSONObject();

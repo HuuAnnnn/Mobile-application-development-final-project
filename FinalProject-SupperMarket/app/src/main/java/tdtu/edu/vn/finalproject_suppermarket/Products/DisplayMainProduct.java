@@ -1,6 +1,8 @@
 package tdtu.edu.vn.finalproject_suppermarket.Products;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,10 +34,13 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import tdtu.edu.vn.finalproject_suppermarket.Cart.ShoppingCart;
+import tdtu.edu.vn.finalproject_suppermarket.ChooseAddressActivity;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 /**
@@ -60,7 +66,9 @@ public class DisplayMainProduct extends Fragment {
     private ProgressBar spinner;
     private EditText inputSearch;
     private ImageButton btnShoppingCart;
+    private TextView updateDeliveryAddress;
 
+    private TextView tvAddressDelivery;
     public DisplayMainProduct() {
         // Required empty public constructor
     }
@@ -109,6 +117,18 @@ public class DisplayMainProduct extends Fragment {
         productAdapter = new ProductAdapter<>(getContext(), productArrayList);
         btnShoppingCart = view.findViewById(R.id.btnShoppingCart);
         inputSearch = view.findViewById(R.id.inputSearch);
+        updateDeliveryAddress = view.findViewById(R.id.updateDeliveryAddress);
+
+        tvAddressDelivery = view.findViewById(R.id.tvAddressDelivery);
+        displayAddress();
+
+        updateDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChooseAddressActivity.class);
+                startActivity(intent);
+            }
+        });
         loadProducts();
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -138,6 +158,61 @@ public class DisplayMainProduct extends Fragment {
         });
     }
 
+    public void displayAddress() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        OkHttpClient client = new OkHttpClient();
+        String GET_INFOR = "https://suppermarket-api.fly.dev/user/information";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(GET_INFOR)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                try {
+                    String responseData = response.body().string();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseData);
+                                JSONObject jsonArray = jsonObject.getJSONObject("data");
+                                String city = jsonArray.getString("city");
+                                String district = jsonArray.getString("district");
+                                String ward = jsonArray.getString("ward");
+                                String address = jsonArray.getString("address");
+                                String fullAddress = "Địa chỉ giao hàng: "+address+", "+ward+", "+district+", "+city;
+                                tvAddressDelivery.setText(fullAddress);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    });
+                } catch (Exception e) {
+
+                }
+            }
+        });
+    }
     public void searchProducts(String keyword) {
         OkHttpClient client = new OkHttpClient();
         String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
@@ -175,8 +250,15 @@ public class DisplayMainProduct extends Fragment {
                                 );
                                 productArrayList.add(product);
                             }
-                            productAdapter.updateData(productArrayList, 0);
-                            displayAllProducts.setAdapter(productAdapter);
+                            getActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    productAdapter.updateData(productArrayList, 0);
+
+                                }
+                            });
                             spinner.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {
                             Log.d("onResponse", e.getMessage());

@@ -1,18 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReigisterAddressFragment"
-    android:id="@+id/fragment_register_address">
+    tools:context=".ChooseAddressActivity">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/main_color"
+        android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="125sp"
+            android:layout_height="125sp"
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textAllCaps="true"
+            android:textColor="@color/main_text_color"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout11"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
+        <TextView
+            android:id="@+id/textView_change_pwd_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn địa chỉ giao hàng"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="240dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout11">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -34,12 +78,12 @@
                 android:textColor="@color/black"
                 android:textSize="14dp"
                 android:textStyle="bold" />
+
             <Spinner
                 android:id="@+id/spnProvince"
                 android:layout_width="340dp"
                 android:layout_height="30dp"
-                android:background="@drawable/spinner_combo_box"
-                />
+                android:background="@drawable/spinner_combo_box" />
         </LinearLayout>
 
         <LinearLayout
@@ -166,50 +210,16 @@
             </RadioGroup>
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="340dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnBack"
-                android:layout_width="160dp"
-                android:layout_height="52dp"
-                android:backgroundTint="@color/main_color"
-                android:text="TRỞ VỀ"
-                app:cornerRadius="11dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnContinue"
-                android:layout_width="160dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="20dp"
-                android:backgroundTint="@color/main_color"
-                android:text="TIẾP THEO"
-                app:cornerRadius="11dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btnBack"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSkip"
+            android:id="@+id/btnSaveAddress"
             android:layout_width="340dp"
             android:layout_height="52dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/main_color"
-            android:text="BỎ QUA"
+            android:text="LƯU ĐỊA CHỈ"
             app:cornerRadius="11dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
