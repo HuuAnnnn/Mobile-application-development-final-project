@@ -1,5 +1,6 @@
 package tdtu.edu.vn.finalproject_suppermarket.Products;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -26,14 +28,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import tdtu.edu.vn.finalproject_suppermarket.Cart.DisplayProductCart;
+import tdtu.edu.vn.finalproject_suppermarket.Cart.ShoppingCart;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 /**
@@ -48,6 +49,8 @@ public class DisplayMainProduct extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String GET_PRODUCTS_ENDPOINTS = "https://suppermarket-api.fly.dev/product/products";
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -56,6 +59,7 @@ public class DisplayMainProduct extends Fragment {
     private RecyclerView displayAllProducts;
     private ProgressBar spinner;
     private EditText inputSearch;
+    private ImageButton btnShoppingCart;
 
     public DisplayMainProduct() {
         // Required empty public constructor
@@ -95,18 +99,17 @@ public class DisplayMainProduct extends Fragment {
         return inflater.inflate(R.layout.fragment_display_main_products, container, false);
     }
 
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayAllProducts = view.findViewById(R.id.displayProducts);
         spinner = view.findViewById(R.id.progressBar);
         spinner.bringToFront();
-        productArrayList.add(new Product("1","1","1","1","1",1,"1"));
+        productArrayList.add(new Product("1", "1", "1", "1", "1", 1, "1"));
         productAdapter = new ProductAdapter<>(getContext(), productArrayList);
-        loadProducts();
+        btnShoppingCart = view.findViewById(R.id.btnShoppingCart);
         inputSearch = view.findViewById(R.id.inputSearch);
+        loadProducts();
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,6 +126,14 @@ public class DisplayMainProduct extends Fragment {
                 if (!keyword.equals("")) {
                     searchProducts(keyword);
                 }
+            }
+        });
+
+        btnShoppingCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ShoppingCart.class);
+                getContext().startActivity(intent);
             }
         });
     }
@@ -164,7 +175,7 @@ public class DisplayMainProduct extends Fragment {
                                 );
                                 productArrayList.add(product);
                             }
-                            productAdapter.updateData(productArrayList,0);
+                            productAdapter.updateData(productArrayList, 0);
                             displayAllProducts.setAdapter(productAdapter);
                             spinner.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {

@@ -11,15 +11,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
-import tdtu.edu.vn.finalproject_suppermarket.Notification.NotificationViewHolder;
-import tdtu.edu.vn.finalproject_suppermarket.Products.Product;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartViewHolder> {
     private LayoutInflater inflater;
     private ArrayList<ProductCart> data;
+
     public ProductCartAdapter(Context context, ArrayList<ProductCart> data) {
         this.data = data;
         inflater = LayoutInflater.from(context);
@@ -29,6 +30,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartViewHold
         this.data = data;
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public ProductCartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,7 +44,8 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartViewHold
         ProductCart productCart = (ProductCart) data.get(position);
         holder.tvProductName.setText(productCart.getProductName());
         holder.tvProductId.setText(productCart.getProductName());
-        holder.tvProductPrice.setText(String.valueOf(productCart.getProductPrice()));
+        String priceFormat = NumberFormat.getCurrencyInstance(new Locale("vn", "VN")).format(Integer.parseInt(productCart.getProductPrice()));
+        holder.tvProductPrice.setText(priceFormat);
         holder.tvQuantity.setText(String.valueOf(productCart.getQuantity()));
 
         byte[] decodedString = Base64.decode(productCart.getProductImage(), Base64.DEFAULT);

@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +47,7 @@ public class UserInformation extends Fragment {
     private LinearLayout btnSignOut;
     private TextView tvInforUsername;
     private TextView tvInforFullname;
+
     public UserInformation() {
         // Required empty public constructor
     }
@@ -99,7 +99,7 @@ public class UserInformation extends Fragment {
         displayInformation();
     }
 
-    public void displayInformation(){
+    public void displayInformation() {
         tvInforUsername = getView().findViewById(R.id.tvInforusername);
         tvInforFullname = getView().findViewById(R.id.tvInforfullname);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
@@ -138,22 +138,25 @@ public class UserInformation extends Fragment {
                         public void run() {
                             try {
                                 JSONObject jsonObject = new JSONObject(responseData);
-                                JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
-                                String fullname = jsonArray.getJSONObject(0).getString("first_name")+jsonArray.getJSONObject(0).getString("last_name");
+                                JSONObject jsonArray = jsonObject.getJSONObject("data");
+                                String firstName = jsonArray.getString("first_name");
+                                String lastName = jsonArray.getString("last_name");
+                                String fullName = firstName + lastName;
                                 tvInforUsername.setText(username);
-                                tvInforFullname.setText(fullname);
+                                tvInforFullname.setText(fullName);
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
 
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
         });
     }
+
     public void signOut() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
 from datetime import datetime
 from ..model.CartDTO import AddToCart
+from ..model.UserDTO import UserInformationDTO
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -24,6 +25,7 @@ async def add_to_cart(addToCartDTO: AddToCart):
     current_receipt = receipt_collection.find_one(
         {"username": username, "state": "unpaid"}, {"_id": 0}
     )
+
     receipt_id = ""
 
     if current_receipt == None:
@@ -78,3 +80,39 @@ async def add_to_cart(addToCartDTO: AddToCart):
     receipt_collection.update_one({"id": receipt_id}, receipt_index)
 
     return {"status": True, "data": "Add product successfully"}
+
+
+@router.post("/own-cart")
+async def get_cart(userInformationDTO: UserInformationDTO):
+    username = userInformationDTO.username
+    current_receipt = receipt_collection.find_one(
+        {"username": username, "state": "unpaid"}, {"_id": 0}
+    )
+
+    if current_receipt == None:
+        return {"status": False, "message": "Cart is empty"}
+
+    receipt_id = current_receipt["id"]
+    total = current_receipt["total"]
+    cart = receipt_line_collection.find({"id": receipt_id}, {"_id": 0})
+    user_cart = []
+    for product in cart:
+        product_id = product["product_id"]
+        product_in_cart = product_collection.find_one(
+            {"id": product_id}, {"_id": 0}
+        )
+        user_cart.append(
+            {
+                "product": product_in_cart,
+                "quantity": product["quantity"],
+                "price": product["price"],
+            }
+        )
+
+    status = user_cart != None
+    return {
+        "status": status,
+        "receipt_id": receipt_id,
+        "total": total,
+        "cart": user_cart,
+    }

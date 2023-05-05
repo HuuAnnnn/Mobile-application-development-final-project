@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
@@ -52,7 +54,8 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
         holder.displayProductName.setText(product.getName());
         holder.displayProductOrigin.setText("Nguồn gốc: " + product.getOrigin());
         holder.displayProductDescription.setText(product.getDescription());
-        holder.displayProductPrice.setText("Giá: " + String.valueOf(product.getPrice()));
+        String priceFormat = NumberFormat.getCurrencyInstance(new Locale("vn", "VN")).format(product.getPrice());
+        holder.displayProductPrice.setText("Giá: " + priceFormat);
 
         byte[] decodedString = Base64.decode(product.getImage(), Base64.DEFAULT);
         Bitmap imageProduct = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

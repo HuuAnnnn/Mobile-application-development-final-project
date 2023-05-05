@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from ..database.MongoDB import MongoDB
 from ..model.login import LoginDTO
 from ..model.registerDTO import RegisterDTO
+from ..model.UserDTO import UserInformationDTO
 
 mongo_client = MongoDB()
 database = mongo_client.get_mongo_client("SupperMarketApplication")
@@ -39,7 +40,8 @@ async def login(loginDTO: LoginDTO):
 
 
 @router.post("/information")
-async def information(username: str):
+async def information(userInformationDTO: UserInformationDTO):
+    username = userInformationDTO.username
     if not is_exists_user(username):
         return {"status": False, "message": "User is not exits"}
 
