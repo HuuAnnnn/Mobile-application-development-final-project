@@ -66,6 +66,31 @@
 
 
                 <TextView
+                    android:id="@+id/tvInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_baseline_checklist_24"
+                    android:drawablePadding="20dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:gravity="center_vertical"
+                    android:text="Thông tin cá nhân"
+                    android:clickable="true"
+                    android:textColor="#023047" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+                <TextView
                     android:id="@+id/tvHistoryList"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

@@ -51,6 +51,7 @@ public class UserInformation extends Fragment {
 
     private TextView tvHistoryList;
     private TextView tvChangePassword;
+    private TextView tvUserInfor;
     public UserInformation() {
         // Required empty public constructor
     }
@@ -117,6 +118,15 @@ public class UserInformation extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProductHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tvUserInfor = view.findViewById(R.id.tvInformation);
+        tvUserInfor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserInformationActivity.class);
                 startActivity(intent);
             }
         });
