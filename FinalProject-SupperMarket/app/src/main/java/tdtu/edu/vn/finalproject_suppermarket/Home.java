@@ -36,6 +36,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import tdtu.edu.vn.finalproject_suppermarket.Notification.DisplayNotification;
 import tdtu.edu.vn.finalproject_suppermarket.Products.DisplayMainProduct;
+import tdtu.edu.vn.finalproject_suppermarket.Promotion.PromotionMainDisplay;
 
 public class Home extends AppCompatActivity {
     BottomNavigationView navbar;
@@ -79,6 +80,9 @@ public class Home extends AppCompatActivity {
                         break;
                     case R.id.scan:
                         addNewFragment(new QRCode());
+                        break;
+                    case R.id.promotion:
+                        addNewFragment(new PromotionMainDisplay());
                         break;
                 }
                 return true;

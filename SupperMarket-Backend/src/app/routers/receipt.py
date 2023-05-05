@@ -198,6 +198,7 @@ async def get_history(userInformationDTO: UserInformationDTO):
             history_transactions.append(
                 {
                     "product": product_in_cart,
+                    "receipt_id": receipt_id,
                     "quantity": product["quantity"],
                     "price": product["price"],
                 }

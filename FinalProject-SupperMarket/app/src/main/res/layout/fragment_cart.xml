@@ -50,7 +50,7 @@
                 android:background="@color/main_color"
                 android:fontFamily="@font/inter_bold"
                 android:gravity="center"
-                android:text="Giỏ hàng"
+                android:text="GIỎ HÀNG"
                 android:textColor="#FFFFFF"
                 android:textSize="20dp" />
 

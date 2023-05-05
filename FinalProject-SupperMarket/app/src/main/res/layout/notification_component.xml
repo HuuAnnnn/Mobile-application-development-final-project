@@ -8,22 +8,21 @@
     android:background="@drawable/border_curve_card_four_coners"
     android:backgroundTint="#BED9D9D9"
     android:padding="5dp"
-    android:weightSum="3">
+    android:weightSum="5">
 
     <ImageView
         android:id="@+id/displayNotificationImage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
         android:layout_marginHorizontal="6dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/mockup_product_item" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="2"
+        android:layout_weight="4"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
