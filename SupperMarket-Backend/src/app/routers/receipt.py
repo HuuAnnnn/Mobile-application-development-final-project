@@ -9,6 +9,7 @@ database = mongo_client.get_mongo_client("SupperMarketApplication")
 receipt_collection = database["receipt"]
 receipt_line_collection = database["receiptLine"]
 product_collection = database["products"]
+users_collection = database["user"]
 
 router = APIRouter(
     prefix="/cart",
@@ -215,6 +216,12 @@ async def get_history(userInformationDTO: UserInformationDTO):
 async def checkout(userInformationDTO: UserInformationDTO):
     username = userInformationDTO.username
     receipt = {"username": username, "state": "unpaid"}
-    update_state = {"$set": {"state": "pay"}}
-    receipt_collection.update_one(receipt, update_state)
-    return {"status": True, "message": "Checkout successfully"}
+    user = users_collection.find_one({"username": username}, {"_id": 0})
+    user_receipt = receipt_collection.find_one(receipt)
+    
+    if user_receipt["total"] <= user["balance"]:
+        update_state = {"$set": {"state": "pay"}}
+        receipt_collection.update_one(receipt, update_state)
+        return {"status": True, "message": "Checkout successfully"}
+    
+    return {"status": False, "message": "Checkout unsuccessfully"}

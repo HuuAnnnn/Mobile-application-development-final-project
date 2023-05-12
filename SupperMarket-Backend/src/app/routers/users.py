@@ -6,6 +6,7 @@ from ..model.UserDTO import (
     UserInformationDTO,
     ChangePasswordDTO,
     UpdateAddressDTO,
+    UpdateUserImageDTO,
 )
 
 mongo_client = MongoDB()
@@ -55,6 +56,20 @@ async def information(userInformationDTO: UserInformationDTO):
     return {"status": status, "data": user_information}
 
 
+@router.post("/update-user-image")
+async def update_user_image(updateUserImage: UpdateUserImageDTO):
+    username = updateUserImage.username
+    image = updateUserImage.newImage
+
+    if is_exists_user(username):
+        user_collection.update_one(
+            {"username": username}, {"$set": {"image": image}}
+        )
+        return {"status": True, "message": "Update successfully"}
+
+    return {"status": False, "message": "User is not exits"}
+
+
 @router.post("/register")
 async def register(registerDTO: RegisterDTO):
     username = registerDTO.username
@@ -79,6 +94,8 @@ async def register(registerDTO: RegisterDTO):
         "password": password,
         "gender": gender,
         "city": city,
+        "balance": 0,
+        "image": "",
         "district": district,
         "ward": ward,
         "address": address,

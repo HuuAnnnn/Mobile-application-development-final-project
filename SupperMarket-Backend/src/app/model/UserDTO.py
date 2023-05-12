@@ -17,3 +17,8 @@ class UpdateAddressDTO(BaseModel):
     ward: str
     address: str
     type_of_address: str
+
+
+class UpdateUserImageDTO(BaseModel):
+    username: str
+    newImage: str
