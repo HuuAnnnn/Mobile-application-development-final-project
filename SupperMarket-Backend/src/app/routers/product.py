@@ -36,20 +36,8 @@ async def get_product_by_category(category: str):
 
 @router.get("/search")
 async def search(keyword: str):
-    result = product_collection.aggregate(
-        [
-            {
-                "$search": {
-                    "index": "product_name_search",
-                    "text": {
-                        "query": keyword,
-                        "path": "name",
-                        "fuzzy": {},
-                    },
-                }
-            },
-            {"$project": {"_id": 0}},
-        ]
+    result = product_collection.find(
+        {"$text": {"$search": f'"{keyword}"'}}, {"_id": 0}
     )
 
     data = []
