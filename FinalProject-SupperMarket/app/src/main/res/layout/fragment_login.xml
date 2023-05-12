@@ -22,7 +22,6 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
@@ -151,12 +150,11 @@
             android:id="@+id/vGmail"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="36dp"
             android:background="@drawable/gmail_svgrepo_com"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.35"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintBottom_toBottomOf="@+id/cardView"
+            app:layout_constraintEnd_toEndOf="@+id/cardView"
+            app:layout_constraintStart_toStartOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="@+id/cardView" />
 
         <View
             android:id="@+id/materialCardView"
@@ -174,12 +172,11 @@
             android:id="@+id/vFacebook"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="98dp"
-            android:layout_marginTop="35dp"
             android:background="@drawable/facebook_1_svgrepo_com"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
+            app:layout_constraintEnd_toEndOf="@+id/materialCardView"
+            app:layout_constraintStart_toStartOf="@+id/materialCardView"
+            app:layout_constraintTop_toTopOf="@+id/materialCardView" />
 
         <LinearLayout
             android:id="@+id/linearLayout8"
