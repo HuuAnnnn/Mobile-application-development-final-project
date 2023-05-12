@@ -7,6 +7,7 @@ from ..model.UserDTO import (
     ChangePasswordDTO,
     UpdateAddressDTO,
     UpdateUserImageDTO,
+    UpdateBalanceDTO,
 )
 
 mongo_client = MongoDB()
@@ -144,3 +145,22 @@ async def register(updateAddressDTO: UpdateAddressDTO):
     )
 
     return {"status": True, "message": "Register successfully"}
+
+
+@router.post("/update-balance")
+async def update_balance(updateBalanceDTO: UpdateBalanceDTO):
+    username = updateBalanceDTO.username
+    new_money = updateBalanceDTO.amount
+    if is_exists_user(username=username):
+        find_user = {"username": username}
+        user = user_collection.find_one(find_user)
+        user_balance = user["balance"]
+        new_balance = new_money + user_balance
+        user_collection.update_one(
+            find_user,
+            {"$set": {"balance": new_balance}},
+        )
+
+        return {"status": True, "message": "Charge money successfully"}
+
+    return {"status": False, "message": "User is not exists"}

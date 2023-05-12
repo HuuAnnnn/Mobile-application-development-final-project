@@ -218,10 +218,17 @@ async def checkout(userInformationDTO: UserInformationDTO):
     receipt = {"username": username, "state": "unpaid"}
     user = users_collection.find_one({"username": username}, {"_id": 0})
     user_receipt = receipt_collection.find_one(receipt)
-    
+
     if user_receipt["total"] <= user["balance"]:
         update_state = {"$set": {"state": "pay"}}
         receipt_collection.update_one(receipt, update_state)
+        user_balance_after_charge = user["balance"] - user_receipt["total"]
+        update_user_balance = {"$set": {"balance": user_balance_after_charge}}
+        users_collection.update_one(
+            {"username": username},
+            update_user_balance,
+        )
+
         return {"status": True, "message": "Checkout successfully"}
-    
+
     return {"status": False, "message": "Checkout unsuccessfully"}

@@ -22,3 +22,8 @@ class UpdateAddressDTO(BaseModel):
 class UpdateUserImageDTO(BaseModel):
     username: str
     newImage: str
+
+
+class UpdateBalanceDTO(BaseModel):
+    username: str
+    amount: float
