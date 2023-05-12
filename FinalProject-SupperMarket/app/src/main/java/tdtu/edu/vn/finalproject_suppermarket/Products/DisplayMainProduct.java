@@ -1,5 +1,6 @@
 package tdtu.edu.vn.finalproject_suppermarket.Products;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -69,6 +70,7 @@ public class DisplayMainProduct extends Fragment {
     private TextView updateDeliveryAddress;
 
     private TextView tvAddressDelivery;
+
     public DisplayMainProduct() {
         // Required empty public constructor
     }
@@ -129,7 +131,6 @@ public class DisplayMainProduct extends Fragment {
                 startActivity(intent);
             }
         });
-        loadProducts();
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -199,7 +200,7 @@ public class DisplayMainProduct extends Fragment {
                                 String district = jsonArray.getString("district");
                                 String ward = jsonArray.getString("ward");
                                 String address = jsonArray.getString("address");
-                                String fullAddress = "Địa chỉ giao hàng: "+address+", "+ward+", "+district+", "+city;
+                                String fullAddress = "Địa chỉ giao hàng: " + address + ", " + ward + ", " + district + ", " + city;
                                 tvAddressDelivery.setText(fullAddress);
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
@@ -213,6 +214,7 @@ public class DisplayMainProduct extends Fragment {
             }
         });
     }
+
     public void searchProducts(String keyword) {
         OkHttpClient client = new OkHttpClient();
         String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
@@ -270,7 +272,10 @@ public class DisplayMainProduct extends Fragment {
         });
     }
 
-    public void loadProducts() {
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(GET_PRODUCTS_ENDPOINTS).build();
         client.newCall(request).enqueue(new Callback() {
@@ -285,7 +290,7 @@ public class DisplayMainProduct extends Fragment {
                 try {
                     String responseData = response.body().string();
                     JSONObject json = new JSONObject(responseData);
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             boolean isSuccess = false;
@@ -310,9 +315,9 @@ public class DisplayMainProduct extends Fragment {
 
                                         productArrayList.add(product);
                                     }
-                                    productAdapter = new ProductAdapter<Product>(getActivity(), productArrayList);
+                                    productAdapter = new ProductAdapter<Product>(activity, productArrayList);
                                     displayAllProducts.setAdapter(productAdapter);
-                                    displayAllProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                    displayAllProducts.setLayoutManager(new LinearLayoutManager(activity));
                                     spinner.setVisibility(View.INVISIBLE);
                                 }
                             } catch (JSONException e) {

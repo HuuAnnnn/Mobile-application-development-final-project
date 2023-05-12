@@ -1,5 +1,6 @@
 package tdtu.edu.vn.finalproject_suppermarket.Cart;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -129,75 +130,6 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
                 getActivity().finish();
             }
         });
-
-        loadCart();
-    }
-
-    public void loadCart() {
-        final String GET_CART_ENDPOINTS = "https://suppermarket-api.fly.dev/cart/own-cart";
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "");
-        OkHttpClient client = new OkHttpClient();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("username", username);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        // put your json here
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url(GET_CART_ENDPOINTS)
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("onFailure", e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response)
-                    throws IOException {
-                String responseData = response.body().string();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            spinner.setVisibility(View.INVISIBLE);
-                            Log.d("TEST", responseData);
-                            JSONObject json = new JSONObject(responseData);
-                            boolean isNotEmpty = json.getBoolean("status");
-                            Log.d("TEST", isNotEmpty + "");
-                            String totalFormat = NumberFormat.getCurrencyInstance(new Locale("vn", "VN")).format(json.getInt("total"));
-                            tvTotalPrice.setText(totalFormat);
-                            if (isNotEmpty) {
-                                ArrayList<ProductCart> productCartList = new ArrayList<ProductCart>();
-                                JSONArray cart = json.getJSONArray("cart");
-                                for (int i = 0; i < cart.length(); i++) {
-                                    JSONObject cartDetail = cart.getJSONObject(i);
-                                    JSONObject product = cartDetail.getJSONObject("product");
-                                    productCartList.add(new ProductCart(username,
-                                            product.getString("id"),
-                                            product.getString("name"),
-                                            cartDetail.getString("quantity"),
-                                            product.getString("price"),
-                                            product.getString("image")));
-                                }
-
-                                productCartAdapter.updateData(productCartList);
-                            } else {
-                                Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            Log.d("onResponse", e.getMessage());
-                        }
-                    }
-                });
-            }
-        });
     }
 
     public void checkout() {
@@ -255,6 +187,75 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
     }
 
     @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        final String GET_CART_ENDPOINTS = "https://suppermarket-api.fly.dev/cart/own-cart";
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        OkHttpClient client = new OkHttpClient();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(GET_CART_ENDPOINTS)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                String responseData = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            spinner.setVisibility(View.INVISIBLE);
+                            Log.d("TEST", responseData);
+                            JSONObject json = new JSONObject(responseData);
+                            boolean isNotEmpty = json.getBoolean("status");
+                            Log.d("TEST", isNotEmpty + "");
+                            String totalFormat = NumberFormat.getCurrencyInstance(new Locale("vn", "VN")).format(json.getInt("total"));
+                            tvTotalPrice.setText(totalFormat);
+                            if (isNotEmpty) {
+                                ArrayList<ProductCart> productCartList = new ArrayList<ProductCart>();
+                                JSONArray cart = json.getJSONArray("cart");
+                                for (int i = 0; i < cart.length(); i++) {
+                                    JSONObject cartDetail = cart.getJSONObject(i);
+                                    JSONObject product = cartDetail.getJSONObject("product");
+                                    productCartList.add(new ProductCart(username,
+                                            product.getString("id"),
+                                            product.getString("name"),
+                                            cartDetail.getString("quantity"),
+                                            product.getString("price"),
+                                            product.getString("image")));
+                                }
+
+                                productCartAdapter.updateData(productCartList);
+                            } else {
+                                Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.d("onResponse", e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
     public void onDataChanged(String data) {
         tvTotalPrice.setText(data);
     }
@@ -264,6 +265,11 @@ public class DisplayProductCart extends Fragment implements OnDataChangeListener
         if (state) {
             spinner.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override

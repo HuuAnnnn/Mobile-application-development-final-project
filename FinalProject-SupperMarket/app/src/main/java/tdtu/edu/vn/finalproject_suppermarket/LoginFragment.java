@@ -156,7 +156,11 @@ public class LoginFragment extends Fragment {
                             .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                                    spinner.setVisibility(View.INVISIBLE);
+                                    tvRegister.setEnabled(true);
+                                    btnLogin.setEnabled(true);
+                                    edtUsername.setEnabled(true);
+                                    edtPassword.setEnabled(true);
                                 }
                             }).show();
                 } else {

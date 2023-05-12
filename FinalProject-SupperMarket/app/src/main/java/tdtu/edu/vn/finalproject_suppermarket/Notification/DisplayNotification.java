@@ -1,5 +1,7 @@
 package tdtu.edu.vn.finalproject_suppermarket.Notification;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +49,7 @@ public class DisplayNotification extends Fragment {
     private RecyclerView displayNotification;
     private NotificationAdapter notificationAdapter;
     private ProgressBar spinner;
+    private ArrayList<Notification> notificationsData;
 
     public DisplayNotification() {
         // Required empty public constructor
@@ -91,10 +94,16 @@ public class DisplayNotification extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         displayNotification = view.findViewById(R.id.displayNotification);
         spinner = view.findViewById(R.id.progressBar);
-        loadNotifications();
+        notificationsData = new ArrayList<Notification>();
+        notificationAdapter = new NotificationAdapter<Notification>(getActivity(), notificationsData);
+        displayNotification.setAdapter(notificationAdapter);
+        displayNotification.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    public void loadNotifications() {
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
         final String GET_NOTIFICATIONS_ENDPOINTS = "https://suppermarket-api.fly.dev/notification/notifications";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(GET_NOTIFICATIONS_ENDPOINTS).build();
@@ -110,7 +119,7 @@ public class DisplayNotification extends Fragment {
                 try {
                     String responseData = response.body().string();
                     JSONObject json = new JSONObject(responseData);
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             boolean isSuccess = false;
@@ -134,10 +143,9 @@ public class DisplayNotification extends Fragment {
 
                                         notifications.add(notification);
                                     }
-                                    notificationAdapter = new NotificationAdapter<Notification>(getActivity(), notifications);
-                                    displayNotification.setAdapter(notificationAdapter);
-                                    displayNotification.setLayoutManager(new LinearLayoutManager(getActivity()));
+
                                     spinner.setVisibility(View.INVISIBLE);
+                                    notificationAdapter.updateData(notifications);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -149,5 +157,10 @@ public class DisplayNotification extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

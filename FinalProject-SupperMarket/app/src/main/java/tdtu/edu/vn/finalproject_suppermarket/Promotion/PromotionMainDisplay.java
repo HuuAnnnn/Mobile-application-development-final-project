@@ -1,5 +1,7 @@
 package tdtu.edu.vn.finalproject_suppermarket.Promotion;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,10 +94,12 @@ public class PromotionMainDisplay extends Fragment {
         ArrayList<Promotion> promotionArrayList = new ArrayList<>();
         promotionAdapter = new PromotionAdapter(getContext(), promotionArrayList);
         displayPromotion.setAdapter(promotionAdapter);
-        loadPromotions();
     }
 
-    public void loadPromotions() {
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
         OkHttpClient client = new OkHttpClient();
         String PROMOTIONS_ENDPOINTS = "https://suppermarket-api.fly.dev/promotion/promotions";
 
@@ -111,7 +115,7 @@ public class PromotionMainDisplay extends Fragment {
                     throws IOException {
                 String responseData = response.body().string();
                 Log.d("Test", responseData);
-                getActivity().runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -137,5 +141,10 @@ public class PromotionMainDisplay extends Fragment {
                 });
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }
