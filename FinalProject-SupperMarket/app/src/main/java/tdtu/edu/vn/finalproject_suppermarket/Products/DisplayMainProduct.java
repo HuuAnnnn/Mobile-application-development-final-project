@@ -40,6 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import tdtu.edu.vn.finalproject_suppermarket.Cart.ShoppingCart;
 import tdtu.edu.vn.finalproject_suppermarket.ChooseAddressActivity;
 import tdtu.edu.vn.finalproject_suppermarket.R;
@@ -220,7 +221,7 @@ public class DisplayMainProduct extends Fragment {
         String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
         Toast.makeText(getContext(), findProductString, Toast.LENGTH_SHORT).show();
 
-        Request request = new Request.Builder().url(findProductString).build();
+        Request request = new Request.Builder().url(findProductString).get().build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -230,7 +231,8 @@ public class DisplayMainProduct extends Fragment {
             @Override
             public void onResponse(Call call, final Response response)
                     throws IOException {
-                String responseData = response.body().string();
+                ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+                String responseData = responseBodyCopy.string();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -263,7 +265,6 @@ public class DisplayMainProduct extends Fragment {
                             });
                             spinner.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {
-                            Log.d("onResponse", e.getMessage());
                             throw new RuntimeException(e);
                         }
                     }

@@ -72,7 +72,19 @@ public class ChangePassword extends AppCompatActivity {
                                     }
                                 }).show();
                     } else {
-                        changePassword(username, password);
+                        new AlertDialog.Builder(ChangePassword.this)
+                                .setTitle("Thông báo")
+                                .setMessage("Bạn có muốn chắc muốn thay đổi mật khẩu")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        changePassword(username, password);
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    }
+                                }).show();
                     }
                 }
             }

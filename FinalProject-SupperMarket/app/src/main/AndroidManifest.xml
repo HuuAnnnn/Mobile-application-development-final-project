@@ -20,6 +20,9 @@
         android:theme="@style/Theme.FinalProjectSupperMarket"
         tools:targetApi="31">
         <activity
+            android:name=".ChangeAvatarActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserInformationActivity"
             android:exported="false" />
         <activity
@@ -68,7 +71,6 @@
         <activity
             android:name=".Cart.CheckoutFail"
             android:exported="false">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -76,7 +78,6 @@
         <activity
             android:name=".Promotion.PromotionDisplay"
             android:exported="false">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -84,12 +85,10 @@
         <activity
             android:name=".Cart.CheckoutSuccess"
             android:exported="false">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".AuthActivity"
             android:exported="false" />

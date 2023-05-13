@@ -147,16 +147,30 @@ public class RegisterFragment extends Fragment {
 
                                     }
                                 }).show();
-                        edtUsername.setText(password);
-                        edtFirstname.setText(rePassword);
                     } else {
-                        register(username, lastname, firstname, phone, password, gender);
+                        if(!checkPassword(password)){
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Thông báo")
+                                    .setMessage("Mật khẩu cần ít nhất 8 chữ số, chữ hoa và chữ thường")
+                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    }).show();
+                        }else {
+                            register(username, lastname, firstname, phone, password, gender);
+                        }
                     }
                 }
             }
         });
     }
 
+    public boolean checkPassword(String password){
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}";
+        return password.matches(pattern);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

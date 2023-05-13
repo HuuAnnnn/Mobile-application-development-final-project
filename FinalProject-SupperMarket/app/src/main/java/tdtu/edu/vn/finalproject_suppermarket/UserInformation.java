@@ -1,19 +1,32 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+
+import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -21,6 +34,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -52,6 +68,7 @@ public class UserInformation extends Fragment {
     private TextView tvHistoryList;
     private TextView tvChangePassword;
     private TextView tvUserInfor;
+    private ImageView imgvAvatar;
     public UserInformation() {
         // Required empty public constructor
     }
@@ -130,7 +147,20 @@ public class UserInformation extends Fragment {
                 startActivity(intent);
             }
         });
+
+        imgvAvatar = view.findViewById(R.id.imgvAvatar);
+        imgvAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),ChangeAvatarActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
+
+
+
 
     public void displayInformation() {
         tvInforUsername = getView().findViewById(R.id.tvInforusername);

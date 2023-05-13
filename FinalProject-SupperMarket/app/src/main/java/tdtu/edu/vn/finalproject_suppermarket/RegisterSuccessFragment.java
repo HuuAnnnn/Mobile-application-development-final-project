@@ -86,6 +86,7 @@ public class RegisterSuccessFragment extends Fragment {
                 viewPager.setCurrentItem(0);
             }
         });
+
     }
 
     @Override
