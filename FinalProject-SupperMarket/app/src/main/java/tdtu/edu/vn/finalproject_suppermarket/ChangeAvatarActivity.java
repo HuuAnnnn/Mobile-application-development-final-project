@@ -4,25 +4,49 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.button.MaterialButton;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ChangeAvatarActivity extends AppCompatActivity {
 
     private MaterialButton btnPickImage;
     private MaterialButton btnSave;
     private ImageView imgAvatar;
+    private String img_str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_avatar);
+        img_str = "";
         btnPickImage = findViewById(R.id.btnPickImage);
         btnPickImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +64,7 @@ public class ChangeAvatarActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                updateAvatar(img_str);
                                 finish();
                             }
                         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -65,6 +90,60 @@ public class ChangeAvatarActivity extends AppCompatActivity {
                 Uri imageUri = data.getData();
                 imgAvatar = findViewById(R.id.imgvAvatar);
                 imgAvatar.setImageURI(imageUri);
+                imgAvatar.buildDrawingCache();
+                Bitmap bitmap = imgAvatar.getDrawingCache();
+
+                ByteArrayOutputStream stream=new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+                byte[] image=stream.toByteArray();
+
+                img_str = Base64.encodeToString(image, 0);
             }
+    }
+
+    public void updateAvatar(String img_str) {
+        SharedPreferences sharedPreferences = ChangeAvatarActivity.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        OkHttpClient client = new OkHttpClient();
+        String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/user/update-user-image";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+            jsonObject.put("newImage", img_str);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(LOGIN_ENDPOINT)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                String responseData = response.body().string();
+                JSONObject json = null;
+                Boolean isChanged = false;
+                try {
+                    json = new JSONObject(responseData);
+                    isChanged = json.getBoolean("status");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                if (isChanged) {
+                    ChangeAvatarActivity.this.finish();
+                } else {
+                }
+            }
+        });
     }
 }
