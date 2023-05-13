@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,22 +130,18 @@ public class DisplayMainProduct extends Fragment {
                 startActivity(intent);
             }
         });
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String keyword = inputSearch.getText().toString().trim();
-                if (!keyword.equals("")) {
-                    searchProducts(keyword);
+        inputSearch.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String keyword = inputSearch.getText().toString().trim();
+                    if (!keyword.equals("")) {
+                        searchProducts(keyword);
+                    }
+                    return true;
                 }
+                return false;
             }
         });
 
@@ -216,6 +211,7 @@ public class DisplayMainProduct extends Fragment {
     }
 
     public void searchProducts(String keyword) {
+        spinner.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
         Toast.makeText(getContext(), findProductString, Toast.LENGTH_SHORT).show();
@@ -234,13 +230,11 @@ public class DisplayMainProduct extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         try {
-                            JSONObject jsonObject = new JSONObject(responseData);
-                            productArrayList = new ArrayList<Product>();
-                            JSONArray data = jsonObject.getJSONArray("data");
+                            ArrayList<Product> products = new ArrayList<Product>();
+                            JSONArray data = new JSONArray(responseData);
                             for (int i = 0; i < data.length(); i++) {
-                                jsonObject = data.getJSONObject(i);
+                                JSONObject jsonObject = data.getJSONObject(i);
                                 Product product = new Product(
                                         jsonObject.getString("id"),
                                         jsonObject.getString("name"),
@@ -250,17 +244,16 @@ public class DisplayMainProduct extends Fragment {
                                         jsonObject.getInt("price"),
                                         jsonObject.getString("image")
                                 );
-                                productArrayList.add(product);
+                                products.add(product);
                             }
-                            getActivity().runOnUiThread(new Runnable() {
 
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
-                                    productAdapter.updateData(productArrayList, 0);
-
+                                    productAdapter.updateData(products);
                                 }
                             });
+
                             spinner.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {
                             Log.d("onResponse", e.getMessage());

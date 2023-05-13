@@ -115,12 +115,13 @@ public class QRCode extends Fragment {
         scannerAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String currentProductID = productID.getText().toString().split(" - ")[0];
                 OkHttpClient client = new OkHttpClient();
                 String LOGIN_ENDPOINT = "https://suppermarket-api.fly.dev/cart/add-to-cart";
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("username", sharedPreferences.getString("username", ""));
-                    jsonObject.put("product_id", productID.getText().toString());
+                    jsonObject.put("product_id", currentProductID);
                     jsonObject.put("quantity", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -175,7 +176,37 @@ public class QRCode extends Fragment {
                     @Override
                     public void run() {
                         scannerAddToCart.setVisibility(View.VISIBLE);
-                        productID.setText(result.getText());
+                        String GET_PRODUCT_NAME = "https://suppermarket-api.fly.dev/product/product";
+                        String productId = result.getText();
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder().url(GET_PRODUCT_NAME + "?product_id=" + productId).build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                Log.d("onFailure", e.getMessage());
+                            }
+
+                            @Override
+                            public void onResponse(Call call, final Response response)
+                                    throws IOException {
+                                try {
+                                    String responseData = response.body().string();
+                                    JSONObject json = new JSONObject(responseData);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                productID.setText(result + " - " + json.getString("data"));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                } catch (JSONException e) {
+                                    Log.d("onResponse", e.getMessage());
+                                }
+                            }
+                        });
                     }
                 });
             }

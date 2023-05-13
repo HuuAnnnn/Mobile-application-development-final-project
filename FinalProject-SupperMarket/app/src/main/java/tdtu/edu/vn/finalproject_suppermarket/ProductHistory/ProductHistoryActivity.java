@@ -1,10 +1,5 @@
 package tdtu.edu.vn.finalproject_suppermarket.ProductHistory;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -29,10 +27,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import tdtu.edu.vn.finalproject_suppermarket.Cart.ProductCart;
-import tdtu.edu.vn.finalproject_suppermarket.ChangePassword;
-import tdtu.edu.vn.finalproject_suppermarket.Products.Product;
-import tdtu.edu.vn.finalproject_suppermarket.Products.ProductAdapter;
 import tdtu.edu.vn.finalproject_suppermarket.R;
 
 public class ProductHistoryActivity extends AppCompatActivity {
@@ -42,6 +36,7 @@ public class ProductHistoryActivity extends AppCompatActivity {
     private RecyclerView displayAllProductsHistory;
     private ProgressBar progressBar;
     private ImageButton btnHistoryBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +79,14 @@ public class ProductHistoryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, final Response response)
-                    throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
                 String responseData = response.body().string();
                 JSONObject json = null;
                 Boolean status = false;
                 try {
                     json = new JSONObject(responseData);
                     status = json.getBoolean("status");
+                    progressBar.setVisibility(View.INVISIBLE);
                     if (status) {
                         ArrayList<ProductHistory> productHistories = new ArrayList<ProductHistory>();
                         JSONArray history = json.getJSONArray("history");
@@ -106,17 +101,13 @@ public class ProductHistoryActivity extends AppCompatActivity {
                                     product.getString("image")));
                         }
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
-
                                 productHistoryAdapter = new ProductHistoryAdapter(ProductHistoryActivity.this, productHistories);
                                 displayAllProductsHistory.setAdapter(productHistoryAdapter);
                                 displayAllProductsHistory.setLayoutManager(new LinearLayoutManager(ProductHistoryActivity.this));
-                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
-
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

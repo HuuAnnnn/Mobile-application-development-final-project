@@ -27,3 +27,15 @@ class UpdateUserImageDTO(BaseModel):
 class UpdateBalanceDTO(BaseModel):
     username: str
     amount: float
+
+
+class UpdateInformationDTO(BaseModel):
+    username : str
+    first_name: str
+    last_name: str
+    phone_number: str
+    gender: str
+    city: str
+    district: str
+    ward: str
+    address: str

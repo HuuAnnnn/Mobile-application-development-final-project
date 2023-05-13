@@ -39,6 +39,11 @@ public class ProductAdapter<E> extends RecyclerView.Adapter<ProductViewHolder> {
         }
     }
 
+    public void updateData(ArrayList<E> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
