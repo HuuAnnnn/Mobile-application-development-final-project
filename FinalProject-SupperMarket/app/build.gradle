@@ -48,4 +48,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:9.0.0'
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
     implementation 'com.github.androidmads:QRGenerator:1.0.1'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation "androidx.activity:activity-ktx:1.2.3"
+    implementation "androidx.fragment:fragment-ktx:1.3.3"
 }
