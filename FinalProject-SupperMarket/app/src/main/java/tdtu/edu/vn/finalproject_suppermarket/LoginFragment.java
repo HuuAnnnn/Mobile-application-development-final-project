@@ -173,7 +173,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ViewPager mviewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-                mviewPager.setCurrentItem(1);
+                mviewPager.setCurrentItem(2);
             }
         });
 
@@ -239,9 +239,11 @@ public class LoginFragment extends Fragment {
             }
 
             @Override
-            public void onResponse(Call call, final Response response)
-                    throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
                 String responseData = response.body().string();
+                if (getActivity() == null) {
+                    return;
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -382,12 +384,15 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call call, final Response response)
                     throws IOException {
                 String responseData = response.body().string();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                    }
-                });
+                        }
+                    });
+
+                }
             }
         });
     }

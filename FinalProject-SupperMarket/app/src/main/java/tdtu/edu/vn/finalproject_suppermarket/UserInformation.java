@@ -1,15 +1,10 @@
 package tdtu.edu.vn.finalproject_suppermarket;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -19,17 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-
-import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -37,9 +25,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.internal.Intrinsics;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -72,6 +57,7 @@ public class UserInformation extends Fragment {
     private TextView tvChangePassword;
     private TextView tvUserInfor;
     private ImageView imgvAvatar;
+
     public UserInformation() {
         // Required empty public constructor
     }
@@ -127,7 +113,7 @@ public class UserInformation extends Fragment {
         tvChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),ChangePassword.class);
+                Intent intent = new Intent(getActivity(), ChangePassword.class);
                 startActivity(intent);
             }
         });
@@ -155,7 +141,7 @@ public class UserInformation extends Fragment {
         imgvAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),ChangeAvatarActivity.class);
+                Intent intent = new Intent(getActivity(), ChangeAvatarActivity.class);
                 startActivity(intent);
 
             }
@@ -163,10 +149,8 @@ public class UserInformation extends Fragment {
     }
 
 
-
-
     public void displayInformation() {
-        tvInforUsername = getView().findViewById(R.id.tvInforusername);
+        tvInforUsername = getView().findViewById(R.id.tvInforUsername);
         tvInforFullname = getView().findViewById(R.id.tvInforfullname);
         imgvAvatar = getView().findViewById(R.id.imgvAvatar);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
@@ -203,19 +187,25 @@ public class UserInformation extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                Log.d("test", responseData);
                                 JSONObject jsonObject = new JSONObject(responseData);
                                 JSONObject jsonArray = jsonObject.getJSONObject("data");
                                 String firstName = jsonArray.getString("first_name");
                                 String lastName = jsonArray.getString("last_name");
                                 String balance = jsonArray.getString("balance");
-                                String fullName = firstName +" "+ lastName;
-                                tvInforFullname.setText("Số dư: " + balance+"đ");
+                                String fullName = (firstName + " " + lastName).trim();
+                                if (fullName.equals("")) {
+                                    fullName = jsonArray.getString("username");
+                                }
+                                tvInforFullname.setText("Số dư: " + balance + "đ");
                                 tvInforUsername.setText(fullName);
 
                                 String encodedImage = jsonArray.getString("image");
-                                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                                imgvAvatar.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, 75, 75, false));
+                                if (!encodedImage.equals("")) {
+                                    byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                    imgvAvatar.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, 75, 75, false));
+                                }
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }

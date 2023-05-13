@@ -37,6 +37,7 @@ public class ChangePassword extends AppCompatActivity {
     private EditText edtRePassword;
     private MaterialButton btnChangePassword;
     private ImageView showPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,12 +102,10 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     public void ShowHidePass(ImageView showPassword) {
-
         if (showPassword.getId() == R.id.btnShowPassword1) {
 
             if (edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
                 ((ImageView) (showPassword)).setImageResource(R.drawable.show_password_icon);
-
                 //Show Password
                 edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 edtPassword.setSelection(edtPassword.getText().length());
@@ -119,6 +118,7 @@ public class ChangePassword extends AppCompatActivity {
             }
         }
     }
+
     public void changePassword(String username, String password) {
         String hashPassword = Utils.md5Hash(password);
         OkHttpClient client = new OkHttpClient();

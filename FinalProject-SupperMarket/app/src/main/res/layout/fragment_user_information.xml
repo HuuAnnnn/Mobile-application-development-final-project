@@ -33,7 +33,7 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/tvInforusername"
+                    android:id="@+id/tvInforUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Số dư: "
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -72,13 +72,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:paddingLeft="5dp"
+                    android:clickable="true"
                     android:drawableLeft="@drawable/user"
                     android:drawablePadding="20dp"
                     android:fontFamily="@font/inter_bold"
                     android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
                     android:text="Thông tin cá nhân"
-                    android:clickable="true"
                     android:textColor="#023047" />
 
             </LinearLayout>
@@ -122,12 +122,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:clickable="true"
                     android:drawableLeft="@drawable/ic_baseline_checklist_24"
                     android:drawablePadding="20dp"
                     android:fontFamily="@font/inter_bold"
                     android:gravity="center_vertical"
                     android:text="Thay đổi mật khẩu"
-                    android:clickable="true"
                     android:textColor="#023047" />
 
             </LinearLayout>
