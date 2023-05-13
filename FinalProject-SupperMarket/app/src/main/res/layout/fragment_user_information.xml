@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/imgvAvatar"
                 android:layout_width="75dp"
-                android:layout_height="match_parent"
+                android:layout_height="75dp"
                 android:layout_weight="0"
                 android:clickable="true"
                 android:src="@android:mipmap/sym_def_app_icon" />
@@ -38,15 +38,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/inter_bold"
-                    android:text="username"
+                    android:text="Tên"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tvInforfullname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="Số dư: "
+                    android:textSize="18sp"/>
             </LinearLayout>
 
         </LinearLayout>

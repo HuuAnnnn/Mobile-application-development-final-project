@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,10 +43,12 @@ public class ChangeAvatarActivity extends AppCompatActivity {
     private MaterialButton btnSave;
     private ImageView imgAvatar;
     private String img_str;
+    private ImageView imgvAvatar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_avatar);
+        displayInformation();
         img_str = "";
         btnPickImage = findViewById(R.id.btnPickImage);
         btnPickImage.setOnClickListener(new View.OnClickListener() {
@@ -94,13 +97,69 @@ public class ChangeAvatarActivity extends AppCompatActivity {
                 Bitmap bitmap = imgAvatar.getDrawingCache();
 
                 ByteArrayOutputStream stream=new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] image=stream.toByteArray();
 
                 img_str = Base64.encodeToString(image, 0);
             }
     }
 
+    public void displayInformation() {
+        imgvAvatar = findViewById(R.id.imgvAvatar);
+        SharedPreferences sharedPreferences = ChangeAvatarActivity.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        OkHttpClient client = new OkHttpClient();
+        String GET_INFOR = "https://suppermarket-api.fly.dev/user/information";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(GET_INFOR)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response)
+                    throws IOException {
+                try {
+                    String responseData = response.body().string();
+
+                    ChangeAvatarActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseData);
+                                JSONObject jsonArray = jsonObject.getJSONObject("data");
+                                String lastname = jsonArray.getString("image");
+
+                                String encodedImage = jsonArray.getString("image");
+                                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                imgvAvatar.setImageBitmap(decodedByte);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    });
+                } catch (Exception e) {
+
+                }
+            }
+        });
+    }
     public void updateAvatar(String img_str) {
         SharedPreferences sharedPreferences = ChangeAvatarActivity.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");

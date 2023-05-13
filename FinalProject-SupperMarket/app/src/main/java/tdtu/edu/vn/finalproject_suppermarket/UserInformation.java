@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -165,6 +168,7 @@ public class UserInformation extends Fragment {
     public void displayInformation() {
         tvInforUsername = getView().findViewById(R.id.tvInforusername);
         tvInforFullname = getView().findViewById(R.id.tvInforfullname);
+        imgvAvatar = getView().findViewById(R.id.imgvAvatar);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
         OkHttpClient client = new OkHttpClient();
@@ -203,9 +207,15 @@ public class UserInformation extends Fragment {
                                 JSONObject jsonArray = jsonObject.getJSONObject("data");
                                 String firstName = jsonArray.getString("first_name");
                                 String lastName = jsonArray.getString("last_name");
-                                String fullName = firstName + lastName;
-                                tvInforUsername.setText(username);
-                                tvInforFullname.setText(fullName);
+                                String balance = jsonArray.getString("balance");
+                                String fullName = firstName +" "+ lastName;
+                                tvInforFullname.setText("Số dư: " + balance+"đ");
+                                tvInforUsername.setText(fullName);
+
+                                String encodedImage = jsonArray.getString("image");
+                                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                imgvAvatar.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, 75, 75, false));
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
