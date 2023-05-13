@@ -132,24 +132,6 @@ public class DisplayMainProduct extends Fragment {
                 startActivity(intent);
             }
         });
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String keyword = inputSearch.getText().toString().trim();
-                if (!keyword.equals("")) {
-                    searchProducts(keyword);
-                }
-            }
-        });
 
         btnShoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,62 +198,7 @@ public class DisplayMainProduct extends Fragment {
         });
     }
 
-    public void searchProducts(String keyword) {
-        OkHttpClient client = new OkHttpClient();
-        String findProductString = "https://suppermarket-api.fly.dev/product/search?keyword=" + keyword.replace(" ", "%20");
-        Toast.makeText(getContext(), findProductString, Toast.LENGTH_SHORT).show();
 
-        Request request = new Request.Builder().url(findProductString).get().build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("onFailure", e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response)
-                    throws IOException {
-                ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
-                String responseData = responseBodyCopy.string();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseData);
-                            productArrayList = new ArrayList<Product>();
-                            JSONArray data = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < data.length(); i++) {
-                                jsonObject = data.getJSONObject(i);
-                                Product product = new Product(
-                                        jsonObject.getString("id"),
-                                        jsonObject.getString("name"),
-                                        jsonObject.getString("origin"),
-                                        jsonObject.getString("description"),
-                                        jsonObject.getString("category"),
-                                        jsonObject.getInt("price"),
-                                        jsonObject.getString("image")
-                                );
-                                productArrayList.add(product);
-                            }
-                            getActivity().runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-
-                                    productAdapter.updateData(productArrayList, 0);
-
-                                }
-                            });
-                            spinner.setVisibility(View.INVISIBLE);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
-        });
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {

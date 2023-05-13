@@ -6,9 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,7 +36,7 @@ public class ChangePassword extends AppCompatActivity {
     private EditText edtPassword;
     private EditText edtRePassword;
     private MaterialButton btnChangePassword;
-
+    private ImageView showPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,13 @@ public class ChangePassword extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtRePassword = findViewById(R.id.edtRePassword);
         btnChangePassword = findViewById(R.id.btnChangePassword);
-
+        showPassword = findViewById(R.id.btnShowPassword1);
+        showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowHidePass(showPassword);
+            }
+        });
         SharedPreferences sharedPreferences = ChangePassword.this.getSharedPreferences("SupperMarket", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
 
@@ -91,6 +100,25 @@ public class ChangePassword extends AppCompatActivity {
         });
     }
 
+    public void ShowHidePass(ImageView showPassword) {
+
+        if (showPassword.getId() == R.id.btnShowPassword1) {
+
+            if (edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
+                ((ImageView) (showPassword)).setImageResource(R.drawable.show_password_icon);
+
+                //Show Password
+                edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                edtPassword.setSelection(edtPassword.getText().length());
+            } else {
+                ((ImageView) (showPassword)).setImageResource(R.drawable.hide_password_icon);
+
+                //Hide Password
+                edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                edtPassword.setSelection(edtPassword.getText().length());
+            }
+        }
+    }
     public void changePassword(String username, String password) {
         String hashPassword = Utils.md5Hash(password);
         OkHttpClient client = new OkHttpClient();
